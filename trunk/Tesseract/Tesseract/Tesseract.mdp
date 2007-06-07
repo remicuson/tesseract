@@ -1,0 +1,91 @@
+<Project name="Tesseract" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="./bin/Debug" assembly="Tesseract" />
+      <Build debugmode="True" target="Library" />
+      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="./bin/Release" assembly="Tesseract" />
+      <Build debugmode="False" target="Library" />
+      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="./Core.cs" subtype="Code" buildaction="Compile" />
+    <File name="./AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls" subtype="Directory" buildaction="Compile" />
+    <File name="./Controls/Window.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/Control.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends" subtype="Directory" buildaction="Compile" />
+    <File name="./Backends/IBackend.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/IGraphics.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/IWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry" subtype="Directory" buildaction="Compile" />
+    <File name="./Geometry/Location.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Path.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Measurement.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk" subtype="Directory" buildaction="Compile" />
+    <File name="./Backends/Gtk/GtkBackend.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/GtkWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Misc" subtype="Directory" buildaction="Compile" />
+    <File name="./Misc/Debug.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Misc/RenderEventArgs.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/CairoGraphics.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Shapes" subtype="Directory" buildaction="Compile" />
+    <File name="./Geometry/Shapes/Rectangle.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics" subtype="Directory" buildaction="Compile" />
+    <File name="./Graphics/Pattern.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/Solid.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/Color.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/Colors.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/LinearGradient.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/GradientStop.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/RadialGradient.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/PatternList.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/MouseStateControl.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/Frame.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/ChildList.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Margin.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/Dash.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/Button.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Shapes/RoundedRectangle.cs" subtype="Code" buildaction="Compile" />
+    <File name="./TIM" subtype="Directory" buildaction="Compile" />
+    <File name="./TIM/TIMLoader.cs" subtype="Code" buildaction="Compile" />
+    <File name="./TIM/TIMSaver.cs" subtype="Code" buildaction="Compile" />
+    <File name="./TIM/TIM.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Misc/MouseEventArgs.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/Label.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Geometry/Padding.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Graphics/Font.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Windows" subtype="Directory" buildaction="Compile" />
+    <File name="./Backends/Windows/WindowsBackend.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Windows/WindowsWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Windows/WindowsGraphics.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz" subtype="Directory" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/Buffer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/Context.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/Drawable.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/Glitz.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/Surface.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/Glitz/TextureObject.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Theming" subtype="Directory" buildaction="Compile" />
+    <File name="./Theming/IThemer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Gtk/GtkThemer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Theming/ThemerBase.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Backends/Windows/WindowsThemer.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/HBox.cs" subtype="Code" buildaction="Compile" />
+    <File name="./Controls/VBox.cs" subtype="Code" buildaction="Compile" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.10.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="gdk-sharp, Version=2.10.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </References>
+</Project>
