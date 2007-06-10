@@ -17,7 +17,8 @@ namespace Tesseract.Geometry
 		
 		public RoundedRectangle(Measurement W, Measurement H, Measurement RT, Measurement RB): this(W, H, RT, RT, RB, RB) { }
 		public RoundedRectangle(Measurement W, Measurement H, Measurement R): this(W, H, R, R) { }
-		
+        public RoundedRectangle() : this(10, 10, 2) { }
+
 		Measurement rtl;
 		public Measurement RTL
 		{

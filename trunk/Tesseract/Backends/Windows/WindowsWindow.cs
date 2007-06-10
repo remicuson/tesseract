@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.InteropServices; 
 using Tesseract.Events;
+using Tesseract.Controls;
 
 namespace Tesseract.Backends
 {
@@ -10,11 +12,32 @@ namespace Tesseract.Backends
 		public event EventHandler<MouseEventArgs> MouseRelease;
 		public event EventHandler<RenderEventArgs> Render;
 		public new event EventHandler Resize;
-		
-		public WindowsWindow()
+
+        #region For Client Area Drag
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HTCAPTION = 0x2;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture(); 
+
+        #endregion
+
+        public WindowsWindow()
 		{
 			this.DoubleBuffered = true;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 		}
+
+        Window window;
+        public Window Window
+        {
+            get { return window; }
+            set { window = value; }
+        }
 		
 		public string Title
 		{
@@ -67,11 +90,11 @@ namespace Tesseract.Backends
 				return dpiy;
 			}
 		}
-		
+
 		public bool Framed
 		{
 			get { return base.FormBorderStyle == System.Windows.Forms.FormBorderStyle.Sizable; }
-			set { base.FormBorderStyle = value ? System.Windows.Forms.FormBorderStyle.Sizable : System.Windows.Forms.FormBorderStyle.FixedSingle; }
+			set { base.FormBorderStyle = value ? System.Windows.Forms.FormBorderStyle.Sizable : System.Windows.Forms.FormBorderStyle.None; }
 		}
 		
 		public void ReRender()
@@ -112,6 +135,12 @@ namespace Tesseract.Backends
 		{
 			if (this.MousePress != null)
 				this.MousePress(this, new MouseEventArgs(GetMouseBtn(e.Button), e.X, e.Y));
+
+            if (window.mouseOverControl.WindowDrag)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+            }
 		}
 		
 		protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)

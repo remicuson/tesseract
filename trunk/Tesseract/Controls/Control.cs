@@ -161,6 +161,13 @@ namespace Tesseract.Controls
 			get { return visible; }
 			set { visible = value; }
 		}
+
+        bool windowdrag = false;
+        public bool WindowDrag
+        {
+            get { return windowdrag; }
+            set { windowdrag = value; }
+        }
 		
 		PatternList background;
 		public PatternList Background

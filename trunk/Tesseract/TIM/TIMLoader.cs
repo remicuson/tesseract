@@ -93,7 +93,13 @@ namespace Tesseract.TIM
 					val = new PatternList(((PatternList)val).Control);
 				else if ((val == null) || (val.GetType().GetInterface("IList") != null))
 					val = Activator.CreateInstance(pinfo.PropertyType);
-				
+                else if ((xml.ChildNodes.Count == 1) && (FindType(xml.ChildNodes[0].LocalName) != null))
+                {
+                    xml = xml.ChildNodes[0];
+                    val = Activator.CreateInstance(FindType(xml.LocalName));
+
+                }
+
 				Load(val, xml);
 			
 				pinfo.SetValue(obj, val, null);

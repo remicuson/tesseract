@@ -96,10 +96,16 @@ namespace Tesseract.Backends
         {
             path[path.Count - 1].StartFigure();
 
-            path[path.Count - 1].AddArc((float)L, (float)T, (float)RTL, (float)RTL, 180, 90);
-            path[path.Count - 1].AddArc((float)(R - RTR), (float)T, (float)RTR, (float)RTR, 270, 90);
-            path[path.Count - 1].AddArc((float)(R - RBR), (float)(B - RBR), (float)RBR, (float)RBR, 0, 90);
-            path[path.Count - 1].AddArc((float)L, (float)(B - RBL), (float)RBL, (float)RBL, 90, 90);
+            try
+            {
+                path[path.Count - 1].AddArc((float)L, (float)T, (float)RTL, (float)RTL, 180, 90);
+                path[path.Count - 1].AddArc((float)(R - RTR), (float)T, (float)RTR, (float)RTR, 270, 90);
+                path[path.Count - 1].AddArc((float)(R - RBR), (float)(B - RBR), (float)RBR, (float)RBR, 0, 90);
+                path[path.Count - 1].AddArc((float)L, (float)(B - RBL), (float)RBL, (float)RBL, 90, 90);
+            }
+            catch
+            {
+            }
 
             path[path.Count - 1].CloseFigure();
         }
