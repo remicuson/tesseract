@@ -4,7 +4,7 @@ using Tesseract.Controls;
 using Tesseract.Theming;
 using Tesseract.Graphics;
 
-namespace Tesseract.Backends
+namespace Tesseract.Backends.Windows
 {
     public class WindowsThemer : ThemerBase
     {

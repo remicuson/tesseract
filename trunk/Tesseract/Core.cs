@@ -41,15 +41,6 @@ namespace Tesseract
 		
 		static void SelectBackend()
 		{
-			// Begin bodge: use winforms directly on windows
-			if (Environment.OSVersion.Platform != PlatformID.Unix)
-			{
-				backend = new WindowsBackend();
-				Debug.Info("Using backend WindowsBackend");
-				return;
-			}
-			// End bodge
-			
 			Type[] types = Assembly.GetExecutingAssembly().GetTypes();
 			
 			foreach (Type t in types)

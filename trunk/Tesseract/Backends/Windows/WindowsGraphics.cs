@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Tesseract.Geometry;
 using Tesseract.Graphics;
 
-namespace Tesseract.Backends
+namespace Tesseract.Backends.Windows
 {
 	public class WindowsGraphics: IGraphics
 	{
