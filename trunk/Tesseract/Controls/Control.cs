@@ -216,7 +216,7 @@ namespace Tesseract.Controls
 		
 		public virtual void OnRender(RenderEventArgs e)
 		{
-            Path prevClip = e.Graphics.Clip;
+            e.Graphics.Save();
 
             try
             {
@@ -233,17 +233,15 @@ namespace Tesseract.Controls
                         RenderControl(e.Graphics);
                 }
 
-                e.Graphics.Clip = this.Path;
+                this.Path.Apply(e.Graphics);
+                e.Graphics.Clip();
 
                 foreach (Control child in children)
                     child.OnRender(e);
             }
             finally
             {
-                if (display != DisplayMode.Flow)
-                    e.Graphics.Translate(-this.renderLocation.RealL, -this.renderLocation.RealT);
-
-                e.Graphics.Clip = prevClip;
+                e.Graphics.Restore();
             }
 		}
 		

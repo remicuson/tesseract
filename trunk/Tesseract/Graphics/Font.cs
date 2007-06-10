@@ -23,5 +23,11 @@ namespace Tesseract.Graphics
 			get { return size; }
 			set { size = value; }
 		}
+
+        public void Apply(IGraphics g)
+        {
+            g.FontFamily = family;
+            g.FontSize = size;
+        }
 	}
 }

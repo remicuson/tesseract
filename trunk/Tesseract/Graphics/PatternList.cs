@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Tesseract.Controls;
+using Tesseract.Backends;
 
 namespace Tesseract.Graphics
 {
@@ -23,5 +24,18 @@ namespace Tesseract.Graphics
 			base.Add(item);
 			control.AutoReRender();
 		}
+
+        public void Render(IGraphics g)
+        {
+            foreach (Pattern p in this)
+            {
+                p.Apply(g, control.Path.W, control.Path.H);
+                
+                if (p.Type == PatternType.Fill)
+                    g.Fill();
+                else
+                    g.Stroke();
+            }
+        }
 	}
 }

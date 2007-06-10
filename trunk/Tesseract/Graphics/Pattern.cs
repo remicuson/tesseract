@@ -29,5 +29,10 @@ namespace Tesseract.Graphics
 			get { return type; }
 			set { type = value; }
 		}
+
+        public virtual void Apply(IGraphics g, double W, double H)
+        {
+
+        }
 	}
 }
