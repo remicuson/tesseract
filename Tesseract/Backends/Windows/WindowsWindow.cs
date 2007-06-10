@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Tesseract.Events;
 using Tesseract.Controls;
 
-namespace Tesseract.Backends
+namespace Tesseract.Backends.Windows
 {
 	public class WindowsWindow: System.Windows.Forms.Form, IWindow
 	{
@@ -13,16 +13,19 @@ namespace Tesseract.Backends
 		public event EventHandler<RenderEventArgs> Render;
 		public new event EventHandler Resize;
 
+        System.Drawing.Bitmap bitmap;
+
         #region For Client Area Drag
 
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HTCAPTION = 0x2;
+        const int WM_NCLBUTTONDOWN = 0xA1;
+        const int WM_NCRBUTTONDOWN = 0xA4;
+        const int HTCAPTION = 0x2;
 
         [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture(); 
+        static extern bool ReleaseCapture(); 
 
         #endregion
 
@@ -31,6 +34,16 @@ namespace Tesseract.Backends
 			this.DoubleBuffered = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 		}
+
+        /*protected override System.Windows.Forms.CreateParams CreateParams
+        {
+            get
+            {
+                System.Windows.Forms.CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x00080000; //WS_EX_LAYERED
+                return cp;
+            }
+        }*/
 
         Window window;
         public Window Window
@@ -94,28 +107,116 @@ namespace Tesseract.Backends
 		public bool Framed
 		{
 			get { return base.FormBorderStyle == System.Windows.Forms.FormBorderStyle.Sizable; }
-			set { base.FormBorderStyle = value ? System.Windows.Forms.FormBorderStyle.Sizable : System.Windows.Forms.FormBorderStyle.None; }
+			set
+            {
+                base.FormBorderStyle = value ? System.Windows.Forms.FormBorderStyle.Sizable : System.Windows.Forms.FormBorderStyle.None;
+            
+                if (!value)
+                    Win32.SetWindowLong(this.Handle, Win32.GWL_EXSTYLE, Win32.WS_EX_LAYERED);
+            }
 		}
 		
 		public void ReRender()
 		{
+            if (!Framed)
+                PerformRender();
+
 			base.Invalidate();
 		}
 		
 		public void ReRender(double L, double T, double R, double B)
 		{
+            if (!Framed)
+                PerformRender();
+
 			base.Invalidate(new System.Drawing.Rectangle((int)L, (int)T, (int)(R - L), (int)(B - T)));
 		}
+
+        protected override void Dispose(bool disposing)
+        {
+            if (bitmap != null)
+                bitmap.Dispose();
+
+            base.Dispose(disposing);
+        }
+
+        void UpdatePPMask(System.Drawing.Bitmap bitmap)
+        {
+            IntPtr screenDc = Win32.GetDC(IntPtr.Zero);
+            IntPtr memDc = Win32.CreateCompatibleDC(screenDc);
+            IntPtr hBitmap = IntPtr.Zero;
+            IntPtr oldBitmap = IntPtr.Zero;
+
+            try
+            {
+                hBitmap = bitmap.GetHbitmap(System.Drawing.Color.FromArgb(0));
+                oldBitmap = Win32.SelectObject(memDc, hBitmap);
+
+                Win32.Size size = new Win32.Size(bitmap.Width, bitmap.Height);
+                Win32.Point pointSource = new Win32.Point(0, 0);
+                Win32.Point topPos = new Win32.Point(Left, Top);
+                Win32.BLENDFUNCTION blend = new Win32.BLENDFUNCTION();
+                blend.BlendOp = Win32.AC_SRC_OVER;
+                blend.BlendFlags = 0;
+                blend.SourceConstantAlpha = 255;
+                blend.AlphaFormat = Win32.AC_SRC_ALPHA;
+
+                Win32.UpdateLayeredWindow(Handle, screenDc, ref topPos, ref size, memDc, ref pointSource, 0, ref blend, Win32.ULW_ALPHA);
+            }
+            finally
+            {
+                Win32.ReleaseDC(IntPtr.Zero, screenDc);
+
+                if (hBitmap != IntPtr.Zero)
+                {
+                    Win32.SelectObject(memDc, oldBitmap);
+                    Win32.DeleteObject(hBitmap);
+                }
+
+                Win32.DeleteDC(memDc);
+            }
+        }
 		
-		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+		protected void PerformRender()
 		{
-			WindowsGraphics g = new WindowsGraphics(e.Graphics, W, H);
+            if (bitmap != null)
+                bitmap.Dispose();
+
+            bitmap = new System.Drawing.Bitmap((int)W, (int)H, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Graphics wg = System.Drawing.Graphics.FromImage(bitmap);
+            wg.Clear(System.Drawing.Color.Transparent);
+
+			WindowsGraphics g = new WindowsGraphics(wg, W, H);
 			
 			if (this.Render != null)
 				this.Render(this, new RenderEventArgs(g));
 			
 			g.Dispose();
+            wg.Dispose();
+
+            UpdatePPMask(bitmap);
 		}
+
+        protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+        {
+            if (Framed)
+            {
+                WindowsGraphics g = new WindowsGraphics(e.Graphics, W, H);
+
+                if (this.Render != null)
+                    this.Render(this, new RenderEventArgs(g));
+
+                g.Dispose();
+            }
+            else
+                base.OnPaint(e);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            PerformRender();
+        }
 
 		protected override void OnResize(EventArgs e)
 		{
@@ -139,7 +240,11 @@ namespace Tesseract.Backends
             if (window.mouseOverControl.WindowDrag)
             {
                 ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+
+                if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+                else
+                    SendMessage(Handle, WM_NCRBUTTONDOWN, HTCAPTION, 0);
             }
 		}
 		

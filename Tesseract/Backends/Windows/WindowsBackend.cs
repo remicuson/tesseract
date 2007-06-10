@@ -1,7 +1,7 @@
 using System;
 using Tesseract.Theming;
 
-namespace Tesseract.Backends
+namespace Tesseract.Backends.Windows
 {
 	public class WindowsBackend: IBackend
 	{
@@ -21,7 +21,6 @@ namespace Tesseract.Backends
 		public void Init()
 		{
             System.Windows.Forms.Application.EnableVisualStyles();
-            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 		}
 		
 		public IWindow CreateWindow()

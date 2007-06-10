@@ -38,6 +38,7 @@
     <Compile Include="Backends\IBackend.cs" />
     <Compile Include="Backends\IGraphics.cs" />
     <Compile Include="Backends\IWindow.cs" />
+    <Compile Include="Backends\Windows\Win32.cs" />
     <Compile Include="Backends\Windows\WindowsBackend.cs" />
     <Compile Include="Backends\Windows\WindowsGraphics.cs" />
     <Compile Include="Backends\Windows\WindowsThemer.cs" />
