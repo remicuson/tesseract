@@ -80,12 +80,13 @@ namespace Tesseract.Theming
 		/* Render Methods */
 		public virtual void RenderControl(Control c, IGraphics g)
 		{
-			g.Display(c.Background, c.Path);
+            c.Path.Apply(g);
+            c.Background.Render(g);
 			
 			if (c.ActiveOpacity > 0)
 			{
 				g.AlphaMultiplier *= c.ActiveOpacity;
-				g.Display(c.ActiveBackground, c.Path);
+                c.ActiveBackground.Render(g);
 				g.AlphaMultiplier /= c.ActiveOpacity;
 			}
 		}
@@ -97,20 +98,20 @@ namespace Tesseract.Theming
 			if (c.DownOpacity > 0)
 			{
 				g.AlphaMultiplier *= c.DownOpacity;
-				g.Display(c.DownBackground, c.Path);
+                c.DownBackground.Render(g);
 				g.AlphaMultiplier /= c.DownOpacity;
 				
 				if (c.OverDownOpacity > 0)
 				{
 					g.AlphaMultiplier *= c.OverDownOpacity;
-					g.Display(c.OverDownBackground, c.Path);
+                    c.OverDownBackground.Render(g);
 					g.AlphaMultiplier /= c.OverDownOpacity;
 				}
 			}
 			else if (c.OverOpacity > 0)
 			{
 				g.AlphaMultiplier *= c.OverOpacity;
-				g.Display(c.OverBackground, c.Path);
+                c.OverBackground.Render(g);
 				g.AlphaMultiplier /= c.OverOpacity;
 			}
 		}
@@ -137,12 +138,25 @@ namespace Tesseract.Theming
 				
 			if (lbl.Display != DisplayMode.Flow)
 			{
-				double tx = (lbl.Path.W - g.TextWidth(lbl.Font, lbl.Text.Trim())) / 2;
-				double ty = (lbl.Path.H - g.TextHeight(lbl.Font, lbl.Text.Trim())) / 2;
-			
-				g.Translate(tx, ty);
-				g.DisplayText(lbl.TextFill, lbl.Font, lbl.Text.Trim());
-				g.Translate(-tx, -ty);
+                lbl.Font.Apply(g);
+
+                double tw = g.TextWidth(lbl.Text.Trim());
+                double th = g.TextHeight(lbl.Text.Trim());
+				double tx = (lbl.Path.W - tw) / 2;
+				double ty = (lbl.Path.H - th) / 2;
+
+                g.ClearPath();
+                g.Text(lbl.Text.Trim(), tx, ty);
+
+                foreach (Pattern p in lbl.TextFill)
+                {
+                    p.Apply(g, tw, th);
+
+                    if (p.Type == PatternType.Fill)
+                        g.Fill();
+                    else
+                        g.Stroke();
+                }
 			}
 			else
 			{
@@ -150,20 +164,27 @@ namespace Tesseract.Theming
 
 				string[] words = lbl.Text.Trim().Split(new char[] { ' ' });
 
-                //PatternList plist = new PatternList(lbl);
-                //plist.Add(new Solid(Colors.White));
-
 				for (int i = 0; i < words.Length; i++)
 				{
-					double tx = lbl.renderFlowChunkLocations[i].RealL;
-					double ty = lbl.renderFlowChunkLocations[i].RealT;
+                    lbl.Font.Apply(g);
 
-					g.Translate(tx, ty);
-					
-					//g.Display(plist, lbl.flowChunks[i]);
-					
-					g.DisplayText(lbl.TextFill, lbl.Font, words[i]);
-					g.Translate(-tx, -ty);
+                    double tw = lbl.flowChunks[i].W;
+                    double th = lbl.flowChunks[i].H;
+                    double tx = lbl.renderFlowChunkLocations[i].RealL;
+                    double ty = lbl.renderFlowChunkLocations[i].RealT;
+
+                    g.ClearPath();
+                    g.Text(words[i].Trim(), tx, ty);
+
+                    foreach (Pattern p in lbl.TextFill)
+                    {
+                        p.Apply(g, tw, th);
+
+                        if (p.Type == PatternType.Fill)
+                            g.Fill();
+                        else
+                            g.Stroke();
+                    }
 				}
 			}
 		}

@@ -15,206 +15,273 @@ namespace Tesseract.Backends
 			
 			graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 			graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+			graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
 			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 			graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-			
-			//graphics.TranslateTransform(1, 0);
+
+            // Initial Values
+
+            alphamultiplier.Add(1);
+            brush.Add(new System.Drawing.SolidBrush(System.Drawing.Color.Black));
+            fontfamily.Add("sans-serif");
+            fontsize.Add(12);
+            path.Add(new System.Drawing.Drawing2D.GraphicsPath());
+            strokesize.Add(1);
+
+            //graphics.SetClip(new System.Drawing.RectangleF(0, 0, (float)w, (float)h));
 		}
 		
 		public WindowsGraphics(): this(System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(10, 10)), 10, 10) { }
 		
 		public void Dispose()
 		{
-			//graphics.Dispose();
-		}
-		
-		/* Operations */
-		public void Display(PatternList plist, Path path)
-		{
-			System.Drawing.Drawing2D.GraphicsPath pth = GetPath(path);
-			Display(plist, pth, path.W, path.H);
-			pth.Dispose();
-		}
-		
-		void Display(PatternList plist, System.Drawing.Drawing2D.GraphicsPath path, double w, double h)
-		{
-			Path prevClip = this.Clip;
 			
-			foreach (Pattern p in plist)
-			{
-				if (p.Clip == PatternClip.Control)
-					this.Clip = plist.Control.Path;
-				else if (p.Clip == PatternClip.None)
-					this.Clip = null;
-                else if (p.Clip == PatternClip.Parent)
-                {
-                    if (plist.Control.Parent == null)
-                    {
-                        this.Clip = null;
-                    }
-                    else
-                    {
-                        Translate(-plist.Control.renderLocation.RealL.Pixels, -plist.Control.renderLocation.RealT.Pixels);
-                        this.Clip = plist.Control.Parent.Path;
-                        Translate(plist.Control.renderLocation.RealL.Pixels, plist.Control.renderLocation.RealT.Pixels);
-                    }
-                }
-
-				if (p.Type == PatternType.Fill)
-				{
-					System.Drawing.Brush b = GetBrush(p, w, h);
-					graphics.FillPath(b, path);
-					b.Dispose();
-				}
-				else if (p.Type == PatternType.Stroke)
-				{
-					System.Drawing.Brush b = GetBrush(p, w, h);
-					System.Drawing.Pen pen = new System.Drawing.Pen(b, (float)p.StrokeSize.Pixels);
-					
-					if (p is Dash)
-					{
-                        pen.DashPattern = new float[] { (float)((Dash)p).Size, (float)((Dash)p).Size / 2 };
-					}
-
-					graphics.DrawPath(pen, path);
-					
-					pen.Dispose();
-					b.Dispose();
-				}
-			}
-			
-			this.Clip = prevClip;
-		}
-		
-		public void DisplayText(PatternList plist, Font font, string str)
-		{
-			System.Drawing.Drawing2D.GraphicsPath gpath = new System.Drawing.Drawing2D.GraphicsPath();
-			System.Drawing.Font f = GetFont(font);
-			System.Drawing.StringFormat format = new System.Drawing.StringFormat();
-
-            gpath.AddString(str, f.FontFamily, (int)f.Style, f.Size, new System.Drawing.Point(0, 0), format);
-			
-			Display(plist, gpath, TextWidth(font, str), TextHeight(font, str));
-			
-			gpath.Dispose();
 		}
 
-		/* Settings */
-		double alphaMultiplier = 1;
-		public double AlphaMultiplier
-		{
-			get { return alphaMultiplier; }
-			set
-			{
-				alphaMultiplier = value;
-				
-				if (double.IsNaN(alphaMultiplier))
-					alphaMultiplier = 1;
-			}
-		}
-		
-		Path clip;
-		public Path Clip
-		{
-			get { return clip; }
-			set
-			{
-				clip = value;
-				
-				graphics.ResetClip();
-				
-				if (clip != null)
-					graphics.SetClip(GetPath(clip));
-			}
-		}
+        #region Lists
+        List<double> alphamultiplier = new List<double>();
+        List<System.Drawing.Brush> brush = new List<System.Drawing.Brush>();
+        List<System.Drawing.Region> clip = new List<System.Drawing.Region>();
+        List<string> fontfamily = new List<string>();
+        List<double> fontsize = new List<double>();
+        List<System.Drawing.Drawing2D.GraphicsPath> path = new List<System.Drawing.Drawing2D.GraphicsPath>();
+        List<double> strokesize = new List<double>();
+        List<System.Drawing.Drawing2D.Matrix> transform = new List<System.Drawing.Drawing2D.Matrix>();
+        #endregion
 
-		/* Text */
-		public double TextWidth(Font font, string str)
-		{
-			return graphics.MeasureString(str, GetFont(font)).Width;
-		}
-		
-		public double TextHeight(Font font, string str)
-		{
-			return graphics.MeasureString(str, GetFont(font)).Height;
-		}
-		
-		/* Transformations */
-		public void Translate(Location l)
-		{
-			graphics.TranslateTransform((float)l.RealL, (float)l.RealT);
-		}
-		
-		public void Translate(double x, double y)
-		{
-            graphics.TranslateTransform((float)x, (float)y);
-		}
-		
-		/* Utility Methods */
-		System.Drawing.Drawing2D.GraphicsPath GetPath(Path path)
-		{
-			System.Drawing.Drawing2D.GraphicsPath gpath = new System.Drawing.Drawing2D.GraphicsPath();
-			
-			if (path is Rectangle)
-				gpath.AddRectangle(new System.Drawing.RectangleF(0, 0, (float)path.W - 1, (float)path.H - 1));
-			else if (path is RoundedRectangle)
-			{
-                RoundedRectangle rr = (RoundedRectangle)path;
+        #region Operations
 
-                gpath.AddArc(0, 0, (float)rr.RTL, (float)rr.RTL, 180, 90);
-                gpath.AddArc((float)(path.W - rr.RTR - 1), 0, (float)rr.RTR, (float)rr.RTR, 270, 90);
-                gpath.AddArc((float)(path.W - rr.RBR - 1), (float)(path.H - rr.RBR - 1), (float)rr.RBR, (float)rr.RBR, 0, 90);
-                gpath.AddArc(0, (float)(path.H - rr.RBL - 1), (float)rr.RBL, (float)rr.RBL, 90, 90);
-			}
-			
-			return gpath;
-		}
-		
-		System.Drawing.Brush GetBrush(Pattern p, double w, double h)
-		{
-			System.Drawing.Brush brush = null;
-			
-			if (p is Solid)
-				brush = new System.Drawing.SolidBrush(GetColor(((Solid)p).Color));
-			else if (p is LinearGradient)
-			{
-				double x2 = ((LinearGradient)p).Orientation == LinearGradientOrientation.Vertical ? 0 : w;
-				double y2 = ((LinearGradient)p).Orientation == LinearGradientOrientation.Horizontal ? 0 : h;
-				
-				brush = new System.Drawing.Drawing2D.LinearGradientBrush(
-					new System.Drawing.Point(0, 0),
-					new System.Drawing.Point((int)x2, (int)y2),
-					System.Drawing.Color.Transparent,
-					System.Drawing.Color.Transparent);
-				
-				System.Drawing.Drawing2D.ColorBlend cblend = new System.Drawing.Drawing2D.ColorBlend(((LinearGradient)p).Stops.Count);
-				
-				for (int i = 0; i < ((LinearGradient)p).Stops.Count; i++)
-				{
-					cblend.Colors[i] = GetColor(((LinearGradient)p).Stops[i].Color);
-					cblend.Positions[i] = (float)((LinearGradient)p).Stops[i].Stop;
-				}
-				
-				((System.Drawing.Drawing2D.LinearGradientBrush)brush).InterpolationColors = cblend;
-			}
-			else if (p is RadialGradient)
-			{
-				Console.WriteLine("WindowsGraphics: RadialGradient Not Implemented");
-			}
-			
-			return brush;
-		}
-		
-		System.Drawing.Color GetColor(Color c)
-		{
-			return System.Drawing.Color.FromArgb((int)(c.A * alphaMultiplier * 255), (int)(c.R * 255), (int)(c.G * 255), (int)(c.B * 255));
-		}
-		
-		System.Drawing.Font GetFont(Font f)
-		{
-			System.Drawing.Font font = new System.Drawing.Font(f.Family, (float)f.Size, System.Drawing.GraphicsUnit.Pixel);
-			return font;
-		}
-	}
+        public void Clip()
+        {
+            graphics.Clip.Intersect(path[path.Count - 1]);
+            //graphics.SetClip(path[path.Count - 1], System.Drawing.Drawing2D.CombineMode.Intersect);
+            //graphics.FillRectangle(System.Drawing.Brushes.Blue, 0, 0, 400, 300);
+        }
+
+        public void Fill()
+        {
+            graphics.FillPath(brush[brush.Count - 1], path[path.Count - 1]);
+        }
+
+        public void Stroke()
+        {
+            System.Drawing.Pen p = new System.Drawing.Pen(brush[brush.Count - 1], (float)strokesize[strokesize.Count - 1]);
+            graphics.DrawPath(p, path[path.Count - 1]);
+            p.Dispose();
+        }
+
+        #endregion
+
+        #region Path
+        public void ClearPath()
+        {
+            path[path.Count - 1].Reset();
+        }
+
+        public void ClosePath()
+        {
+            path[path.Count - 1].CloseAllFigures();
+        }
+
+        public void Rectangle(double L, double T, double R, double B)
+        {
+            path[path.Count - 1].AddRectangle(new System.Drawing.RectangleF((float)L, (float)T, (float)(R - L), (float)(B - T)));
+        }
+
+        public void RoundedRectangle(double L, double T, double R, double B, double RTL, double RTR, double RBL, double RBR)
+        {
+            path[path.Count - 1].StartFigure();
+
+            path[path.Count - 1].AddArc((float)L, (float)T, (float)RTL, (float)RTL, 180, 90);
+            path[path.Count - 1].AddArc((float)(R - RTR), (float)T, (float)RTR, (float)RTR, 270, 90);
+            path[path.Count - 1].AddArc((float)(R - RBR), (float)(B - RBR), (float)RBR, (float)RBR, 0, 90);
+            path[path.Count - 1].AddArc((float)L, (float)(B - RBL), (float)RBL, (float)RBL, 90, 90);
+
+            path[path.Count - 1].CloseFigure();
+        }
+
+        public void Ellipse(double L, double T, double R, double B)
+        {
+            path[path.Count - 1].AddEllipse((float)L, (float)T, (float)(R - L), (float)(B - T));
+        }
+
+        public void Text(string str, double X, double Y)
+        {
+            System.Drawing.StringFormat format = new System.Drawing.StringFormat();
+            System.Drawing.FontFamily family = null;
+
+            try
+            {
+                family = new System.Drawing.FontFamily(fontfamily[fontfamily.Count - 1]);
+            }
+            catch
+            {
+                family = System.Drawing.FontFamily.GenericSansSerif;
+            }
+
+            path[path.Count - 1].AddString(str, family, 0, (float)fontsize[fontsize.Count - 1], new System.Drawing.Point((int)X, (int)Y), format);
+        }
+
+        public void Line(double X1, double Y1, double X2, double Y2)
+        {
+            path[path.Count - 1].AddLine((float)X1, (float)Y1, (float)X2, (float)Y2);
+        }
+
+        public void Bezier(double X1, double Y1, double X2, double Y2, double X3, double Y3, double X4, double Y4)
+        {
+            path[path.Count - 1].AddBezier((float)X1, (float)Y1, (float)X2, (float)Y2, (float)X3, (float)Y3, (float)X4, (float)Y4);
+        }
+
+        #endregion
+
+        #region Pattern
+
+        public void Solid(double A, double R, double G, double B)
+        {
+            if (brush[brush.Count - 1] != null)
+                brush[brush.Count - 1].Dispose();
+
+            brush[brush.Count - 1] = new System.Drawing.SolidBrush(GetColor(A, R, G, B));
+        }
+
+        public void LinearGradient(double X1, double Y1, double X2, double Y2, double[] S, double[] A, double[] R, double[] G, double[] B)
+        {
+            if (brush[brush.Count - 1] != null)
+                brush[brush.Count - 1].Dispose();
+
+            System.Drawing.Drawing2D.LinearGradientBrush lgb = new System.Drawing.Drawing2D.LinearGradientBrush(
+                new System.Drawing.PointF((float)X1, (float)Y1),
+                new System.Drawing.PointF((float)X2, (float)Y2),
+                System.Drawing.Color.Transparent,
+                System.Drawing.Color.Transparent);
+
+            System.Drawing.Drawing2D.ColorBlend cblend = new System.Drawing.Drawing2D.ColorBlend(S.Length);
+
+            for (int i = 0; i < S.Length; i++)
+            {
+                cblend.Positions[i] = (float)S[i];
+                cblend.Colors[i] = GetColor(A[i], R[i], G[i], B[i]);
+            }
+
+            lgb.InterpolationColors = cblend;
+
+            brush[brush.Count - 1] = lgb;
+        }
+
+        public void RadialGradient(double X1, double Y1, double R1, double X2, double Y2, double R2, double[] S, double[] A, double[] R, double[] G, double[] B)
+        {
+            Debug.Info("WindowsGraphics.RadialGradient Not Implemented");
+        }
+
+        #endregion
+
+        #region Settings
+
+        public double AlphaMultiplier
+        {
+            get { return alphamultiplier[alphamultiplier.Count - 1]; }
+            set { alphamultiplier[alphamultiplier.Count - 1] = value; }
+        }
+
+        #endregion
+
+        #region State
+
+        public void Save()
+        {
+            alphamultiplier.Add(AlphaMultiplier);
+            brush.Add(brush[brush.Count - 1]);
+            fontfamily.Add(FontFamily);
+            fontsize.Add(FontSize);
+            path.Add(path[path.Count - 1]);
+            strokesize.Add(strokesize[strokesize.Count - 1]);
+
+            clip.Add(graphics.Clip);
+            transform.Add(graphics.Transform);
+        }
+
+        public void Restore()
+        {
+            if (alphamultiplier.Count <= 1)
+                return;
+
+            alphamultiplier.RemoveAt(alphamultiplier.Count - 1);
+            brush.RemoveAt(brush.Count - 1);
+            fontfamily.RemoveAt(fontfamily.Count - 1);
+            fontsize.RemoveAt(fontsize.Count - 1);
+            path.RemoveAt(path.Count - 1);
+            strokesize.RemoveAt(strokesize.Count - 1);
+
+            graphics.Transform = transform[transform.Count - 1];
+            transform.RemoveAt(transform.Count - 1);
+
+            graphics.Clip = clip[clip.Count - 1];
+            clip.RemoveAt(clip.Count - 1);
+        }
+        #endregion
+
+        #region Text
+
+        public string FontFamily
+        {
+            get { return fontfamily[fontfamily.Count - 1]; }
+            set { fontfamily[fontfamily.Count - 1] = value; }
+        }
+
+        public double FontSize
+        {
+            get { return fontsize[fontsize.Count - 1]; }
+            set { fontsize[fontsize.Count - 1] = value; }
+        }
+
+        public double TextWidth(string str)
+        {
+            System.Drawing.Font font = new System.Drawing.Font(FontFamily, (float)FontSize, System.Drawing.GraphicsUnit.Pixel);
+            double w = graphics.MeasureString(str, font).Width;
+            font.Dispose();
+
+            return w;
+        }
+
+        public double TextHeight(string str)
+        {
+            System.Drawing.Font font = new System.Drawing.Font(FontFamily, (float)FontSize, System.Drawing.GraphicsUnit.Pixel);
+            double h = graphics.MeasureString(str, font).Height;
+            font.Dispose();
+
+            return h;
+        }
+        
+        #endregion
+
+        #region Transformations
+        public void Rotate(double R)
+        {
+            graphics.RotateTransform((float)(R * (180 / Math.PI)));
+        }
+
+        public void Scale(double X, double Y)
+        {
+            graphics.ScaleTransform((float)X, (float)Y);
+        }
+
+        public void Translate(double X, double Y)
+        {
+            graphics.TranslateTransform((float)X, (float)Y);
+        }
+
+        #endregion
+
+        #region Utility Methods
+
+        System.Drawing.Color GetColor(double A, double R, double G, double B)
+        {
+            return System.Drawing.Color.FromArgb((int)(A * alphamultiplier[alphamultiplier.Count - 1] * 255),
+                                                 (int)(R * 255),
+                                                 (int)(G * 255),
+                                                 (int)(B * 255));
+        }
+
+        #endregion
+    }
 }

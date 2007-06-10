@@ -10,5 +10,11 @@ namespace Tesseract.Geometry
 			base.W = W;
 			base.H = H;
 		}
+
+        public override void Apply(IGraphics g)
+        {
+            g.ClearPath();
+            g.Rectangle(0, 0, W - 1, H - 1);
+        }
 	}
 }

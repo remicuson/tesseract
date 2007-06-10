@@ -35,8 +35,10 @@ namespace Tesseract.Controls
 		
 		public override void HandleAutoSize()
 		{
-			double w = Core.internalGraphics.TextWidth(Font, text);
-			double h = Core.internalGraphics.TextHeight(Font, text);
+            Font.Apply(Core.internalGraphics);
+
+			double w = Core.internalGraphics.TextWidth(text);
+			double h = Core.internalGraphics.TextHeight(text);
 			
 			if (this.Display == DisplayMode.Flow)
 			{
@@ -63,8 +65,10 @@ namespace Tesseract.Controls
 			
 			flowChunks = new Rectangle[words.Length];
 
+            Font.Apply(Core.internalGraphics);
+
 			for (int i = 0; i < flowChunks.Length; i++)
-				flowChunks[i] = new Rectangle(Core.internalGraphics.TextWidth(Font, words[i]) + spaceWidth, Core.internalGraphics.TextHeight(Font, words[i]));
+				flowChunks[i] = new Rectangle(Core.internalGraphics.TextWidth(words[i]) + spaceWidth, Core.internalGraphics.TextHeight(words[i]));
 			
 			return flowChunks;
 		}

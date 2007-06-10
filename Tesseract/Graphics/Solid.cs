@@ -21,6 +21,11 @@ namespace Tesseract.Graphics
 			get { return color; }
 			set { color = value; }
 		}
+
+        public override void Apply(IGraphics g, double W, double H)
+        {
+            g.Solid(color.A, color.R, color.G, color.B);
+        }
 		
 		public override string ToString()
    		{

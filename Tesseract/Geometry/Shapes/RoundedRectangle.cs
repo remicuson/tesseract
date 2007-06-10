@@ -72,5 +72,11 @@ namespace Tesseract.Geometry
 				RB = value;
 			}
 		}
+
+        public override void Apply(IGraphics g)
+        {
+            g.ClearPath();
+            g.RoundedRectangle(0, 0, W - 1, H - 1, RTL, RTR, RBL, RBR);
+        }
 	}
 }

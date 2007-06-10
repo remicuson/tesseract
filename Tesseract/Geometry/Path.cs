@@ -49,6 +49,11 @@ namespace Tesseract
 					control.OnResize();
 			}
 		}
+
+        public virtual void Apply(IGraphics g)
+        {
+
+        }
 		
 		public virtual bool Contains(Measurement X, Measurement Y)
 		{
