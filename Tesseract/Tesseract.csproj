@@ -1,0 +1,92 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8FF35D3D-4651-4013-BCDB-37A55E480C81}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tesseract</RootNamespace>
+    <AssemblyName>Tesseract</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Backends\IBackend.cs" />
+    <Compile Include="Backends\IGraphics.cs" />
+    <Compile Include="Backends\IWindow.cs" />
+    <Compile Include="Backends\Windows\WindowsBackend.cs" />
+    <Compile Include="Backends\Windows\WindowsGraphics.cs" />
+    <Compile Include="Backends\Windows\WindowsThemer.cs" />
+    <Compile Include="Backends\Windows\WindowsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\ChildList.cs" />
+    <Compile Include="Controls\Control.cs" />
+    <Compile Include="Controls\Frame.cs" />
+    <Compile Include="Controls\HBox.cs" />
+    <Compile Include="Controls\Label.cs" />
+    <Compile Include="Controls\MouseStateControl.cs" />
+    <Compile Include="Controls\VBox.cs" />
+    <Compile Include="Controls\Window.cs" />
+    <Compile Include="Core.cs" />
+    <Compile Include="Geometry\Location.cs" />
+    <Compile Include="Geometry\Margin.cs" />
+    <Compile Include="Geometry\Measurement.cs" />
+    <Compile Include="Geometry\Padding.cs" />
+    <Compile Include="Geometry\Path.cs" />
+    <Compile Include="Geometry\Shapes\Rectangle.cs" />
+    <Compile Include="Geometry\Shapes\RoundedRectangle.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Graphics\Dash.cs" />
+    <Compile Include="Graphics\Font.cs" />
+    <Compile Include="Graphics\GradientStop.cs" />
+    <Compile Include="Graphics\LinearGradient.cs" />
+    <Compile Include="Graphics\Pattern.cs" />
+    <Compile Include="Graphics\PatternList.cs" />
+    <Compile Include="Graphics\RadialGradient.cs" />
+    <Compile Include="Graphics\Solid.cs" />
+    <Compile Include="Misc\Debug.cs" />
+    <Compile Include="Misc\MouseEventArgs.cs" />
+    <Compile Include="Misc\RenderEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Theming\IThemer.cs" />
+    <Compile Include="Theming\ThemerBase.cs" />
+    <Compile Include="TIM\TIM.cs" />
+    <Compile Include="TIM\TIMLoader.cs" />
+    <Compile Include="TIM\TIMSaver.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
