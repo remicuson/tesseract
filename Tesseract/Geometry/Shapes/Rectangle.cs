@@ -11,6 +11,8 @@ namespace Tesseract.Geometry
 			base.H = H;
 		}
 
+        public Rectangle() : this(10, 10) { }
+
         public override void Apply(IGraphics g)
         {
             g.ClearPath();

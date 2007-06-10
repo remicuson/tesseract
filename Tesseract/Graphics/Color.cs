@@ -72,6 +72,39 @@ namespace Tesseract.Graphics
    			if (typeof(Colors).GetProperty(s) != null)
    				return (Color)typeof(Colors).GetProperty(s).GetValue(null, null);
 
+            if (s.StartsWith("Color["))
+                s = s.Substring(6);
+            if (s.EndsWith("]"))
+                s = s.Substring(0, s.Length - 1);
+
+            string[] arr = s.Split(new char[] { ':', ',' });
+
+            double A = 1;
+            double R = 0;
+            double G = 0;
+            double B = 0;
+
+            if (arr.Length == 4)
+            {
+                A = double.Parse(arr[0]);
+                
+                string[] newarr = new string[3];
+                newarr[0] = arr[1];
+                newarr[1] = arr[2];
+                newarr[2] = arr[3];
+
+                arr = newarr;
+            }
+
+            if (arr.Length == 3)
+            {
+                R = double.Parse(arr[0]);
+                G = double.Parse(arr[1]);
+                B = double.Parse(arr[2]);
+
+                return new Color(A, R, G, B);
+            }
+
    			return Colors.White;
    		}
 	}

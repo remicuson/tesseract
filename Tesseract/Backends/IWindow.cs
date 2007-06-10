@@ -1,11 +1,14 @@
 using System;
 using Tesseract.Events;
 using Tesseract.Geometry;
+using Tesseract.Controls;
 
 namespace Tesseract.Backends
 {
 	public interface IWindow
 	{
+        Window Window { get; set; }
+
 		string Title { get; set; }
 		
 		double L { get; set; }
@@ -16,7 +19,7 @@ namespace Tesseract.Backends
 		
 		double DpiX { get; }
 		double DpiY { get; }
-		
+
 		bool Framed { get; set; }
 		
 		void ReRender();

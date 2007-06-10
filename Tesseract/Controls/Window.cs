@@ -16,6 +16,7 @@ namespace Tesseract.Controls
 		public Window()
 		{
             backendWindow = Core.backend.CreateWindow();
+            backendWindow.Window = this;
             backendWindow.Render += new EventHandler<RenderEventArgs>(backendRender);
             backendWindow.Resize += new EventHandler(backendResize);
             backendWindow.MouseMove += new EventHandler<MouseEventArgs>(backendMouseMove);
@@ -73,7 +74,16 @@ namespace Tesseract.Controls
 
         void backendResize(object sender, EventArgs e)
         {
-            base.Path = new Rectangle(backendWindow.W, backendWindow.H);
+            if (settingPath)
+                return;
+
+            if (base.Path != null)
+            {
+                base.Path.W = backendWindow.W;
+                base.Path.H = backendWindow.H;
+            }
+            else
+                base.Path = new Rectangle(backendWindow.W, backendWindow.H);
         }
 
         Control activeControl;
@@ -101,21 +111,30 @@ namespace Tesseract.Controls
 		{
 			get { return backendWindow.DpiY; }
 		}
+
+        public bool Framed
+        {
+            get { return backendWindow.Framed; }
+            set { backendWindow.Framed = value; }
+        }
 		
 		public string Title
 		{
 			get { return backendWindow.Title; }
 			set { backendWindow.Title = value; }
 		}
-		
+
+        bool settingPath = false;
 		public override Path Path
 		{
 			get { return base.Path; }
 			set
 			{
 				base.Path = value;
+                settingPath = true;
 				backendWindow.W = value.W.Pixels;
 				backendWindow.H = value.H.Pixels;
+                settingPath = false;
 			}
 		}
 		

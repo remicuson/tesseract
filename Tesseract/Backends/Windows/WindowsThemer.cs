@@ -57,6 +57,8 @@ namespace Tesseract.Backends
             {
                 System.Windows.Forms.ButtonRenderer.DrawButton(wing, bounds, state);
 
+                bounds.Inflate(-5, -5);
+
                 if (btn.Active)
                     System.Windows.Forms.ControlPaint.DrawFocusRectangle(wing, bounds);
             }
