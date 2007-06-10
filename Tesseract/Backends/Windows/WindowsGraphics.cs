@@ -55,9 +55,7 @@ namespace Tesseract.Backends
 
         public void Clip()
         {
-            graphics.Clip.Intersect(path[path.Count - 1]);
-            //graphics.SetClip(path[path.Count - 1], System.Drawing.Drawing2D.CombineMode.Intersect);
-            //graphics.FillRectangle(System.Drawing.Brushes.Blue, 0, 0, 400, 300);
+            graphics.SetClip(path[path.Count - 1], System.Drawing.Drawing2D.CombineMode.Intersect);
         }
 
         public void Fill()
