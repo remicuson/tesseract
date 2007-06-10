@@ -24,6 +24,7 @@ namespace Tesseract.Graphics
 
         public override void Apply(IGraphics g, double W, double H)
         {
+            g.StrokeSize = this.StrokeSize;
             g.Solid(color.A, color.R, color.G, color.B);
         }
 		

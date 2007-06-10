@@ -23,6 +23,7 @@ namespace Tesseract.Backends
 
             alphamultiplier.Add(1);
             brush.Add(new System.Drawing.SolidBrush(System.Drawing.Color.Black));
+            dashsize.Add(0);
             fontfamily.Add("sans-serif");
             fontsize.Add(12);
             path.Add(new System.Drawing.Drawing2D.GraphicsPath());
@@ -42,6 +43,7 @@ namespace Tesseract.Backends
         List<double> alphamultiplier = new List<double>();
         List<System.Drawing.Brush> brush = new List<System.Drawing.Brush>();
         List<System.Drawing.Region> clip = new List<System.Drawing.Region>();
+        List<double> dashsize = new List<double>();
         List<string> fontfamily = new List<string>();
         List<double> fontsize = new List<double>();
         List<System.Drawing.Drawing2D.GraphicsPath> path = new List<System.Drawing.Drawing2D.GraphicsPath>();
@@ -66,6 +68,10 @@ namespace Tesseract.Backends
         public void Stroke()
         {
             System.Drawing.Pen p = new System.Drawing.Pen(brush[brush.Count - 1], (float)strokesize[strokesize.Count - 1]);
+
+            if (dashsize[dashsize.Count - 1] > 0)
+                p.DashPattern = new float[] { (float)dashsize[dashsize.Count - 1], (float)(dashsize[dashsize.Count - 1] / 2) };
+            
             graphics.DrawPath(p, path[path.Count - 1]);
             p.Dispose();
         }
@@ -116,7 +122,7 @@ namespace Tesseract.Backends
             }
             catch
             {
-                family = System.Drawing.FontFamily.GenericSansSerif;
+                family = System.Drawing.SystemFonts.DefaultFont.FontFamily;
             }
 
             path[path.Count - 1].AddString(str, family, 0, (float)fontsize[fontsize.Count - 1], new System.Drawing.Point((int)X, (int)Y), format);
@@ -138,6 +144,8 @@ namespace Tesseract.Backends
 
         public void Solid(double A, double R, double G, double B)
         {
+            Dash(0);
+
             if (brush[brush.Count - 1] != null)
                 brush[brush.Count - 1].Dispose();
 
@@ -146,6 +154,8 @@ namespace Tesseract.Backends
 
         public void LinearGradient(double X1, double Y1, double X2, double Y2, double[] S, double[] A, double[] R, double[] G, double[] B)
         {
+            Dash(0);
+
             if (brush[brush.Count - 1] != null)
                 brush[brush.Count - 1].Dispose();
 
@@ -170,7 +180,14 @@ namespace Tesseract.Backends
 
         public void RadialGradient(double X1, double Y1, double R1, double X2, double Y2, double R2, double[] S, double[] A, double[] R, double[] G, double[] B)
         {
+            Dash(0);
+
             Debug.Info("WindowsGraphics.RadialGradient Not Implemented");
+        }
+
+        public void Dash(double Size)
+        {
+            dashsize[dashsize.Count - 1] = Size;
         }
 
         #endregion
@@ -183,6 +200,12 @@ namespace Tesseract.Backends
             set { alphamultiplier[alphamultiplier.Count - 1] = value; }
         }
 
+        public double StrokeSize
+        {
+            get { return strokesize[strokesize.Count - 1]; }
+            set { strokesize[strokesize.Count - 1] = value; }
+        }
+
         #endregion
 
         #region State
@@ -191,6 +214,7 @@ namespace Tesseract.Backends
         {
             alphamultiplier.Add(AlphaMultiplier);
             brush.Add(brush[brush.Count - 1]);
+            dashsize.Add(dashsize[dashsize.Count - 1]);
             fontfamily.Add(FontFamily);
             fontsize.Add(FontSize);
             path.Add(path[path.Count - 1]);
@@ -207,6 +231,7 @@ namespace Tesseract.Backends
 
             alphamultiplier.RemoveAt(alphamultiplier.Count - 1);
             brush.RemoveAt(brush.Count - 1);
+            dashsize.RemoveAt(dashsize.Count - 1);
             fontfamily.RemoveAt(fontfamily.Count - 1);
             fontsize.RemoveAt(fontsize.Count - 1);
             path.RemoveAt(path.Count - 1);

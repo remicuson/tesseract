@@ -45,6 +45,8 @@ namespace Tesseract.Graphics
 
         public override void Apply(IGraphics g, double W, double H)
         {
+            g.StrokeSize = this.StrokeSize;
+
             double[] S = new double[stops.Count];
             double[] A = new double[stops.Count];
             double[] R = new double[stops.Count];

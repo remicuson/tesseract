@@ -262,6 +262,12 @@ namespace Tesseract.Controls
 		
 		public virtual void OnParented(Control parent)
 		{
+            if (this.Window != null)
+            {
+                if (this.CanActivate() && (this.Window.ActiveControl == null))
+                    this.Window.ActiveControl = this;
+            }
+
 			PositionChildren();
 		}
 		
@@ -413,5 +419,10 @@ namespace Tesseract.Controls
 			
 			autosizing = false;
 		}
+
+        public virtual bool CanActivate()
+        {
+            return true;
+        }
 	}
 }

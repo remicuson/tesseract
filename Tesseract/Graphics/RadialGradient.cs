@@ -74,5 +74,27 @@ namespace Tesseract.Graphics
 		{
 			stops.Add(stop);
 		}
+
+        public override void Apply(IGraphics g, double W, double H)
+        {
+            g.StrokeSize = this.StrokeSize;
+
+            double[] S = new double[stops.Count];
+            double[] A = new double[stops.Count];
+            double[] R = new double[stops.Count];
+            double[] G = new double[stops.Count];
+            double[] B = new double[stops.Count];
+
+            for (int i = 0; i < stops.Count; i++)
+            {
+                S[i] = stops[i].Stop;
+                A[i] = stops[i].Color.A;
+                R[i] = stops[i].Color.R;
+                G[i] = stops[i].Color.G;
+                B[i] = stops[i].Color.B;
+            }
+
+            g.RadialGradient(x1, y1, r1, x2, y2, r2, S, A, R, G, B);
+        }
 	}
 }

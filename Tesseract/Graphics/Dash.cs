@@ -20,5 +20,11 @@ namespace Tesseract.Graphics
 			get { return size; }
 			set { size = value; }
 		}
+
+        public override void Apply(IGraphics g, double W, double H)
+        {
+            base.Apply(g, W, H);
+            g.Dash(size);
+        }
 	}
 }

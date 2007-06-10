@@ -75,6 +75,22 @@ namespace Tesseract.Controls
         {
             base.Path = new Rectangle(backendWindow.W, backendWindow.H);
         }
+
+        Control activeControl;
+        public Control ActiveControl
+        {
+            get { return activeControl; }
+            set
+            {
+                if (activeControl != null)
+                    activeControl.Active = false;
+
+                activeControl = value;
+
+                if (activeControl != null)
+                    activeControl.Active = true;
+            }
+        }
 		
 		public double DpiX
 		{

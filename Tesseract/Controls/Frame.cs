@@ -15,5 +15,10 @@ namespace Tesseract.Controls
 		{
 			Core.themer.RenderFrame(this, g);
 		}
+
+        public override bool CanActivate()
+        {
+            return false;
+        }
 	}
 }
