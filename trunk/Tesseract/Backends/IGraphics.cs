@@ -27,9 +27,11 @@ namespace Tesseract.Backends
         void Solid(double A, double R, double G, double B);
         void LinearGradient(double X1, double Y1, double X2, double Y2, double[] S, double[] A, double[] R, double[] G, double[] B);
         void RadialGradient(double X1, double Y1, double R1, double X2, double Y2, double R2, double[] S, double[] A, double[] R, double[] G, double[] B);
+        void Dash(double Size);
 
 		/* Settings */
 		double AlphaMultiplier { get; set; }
+        double StrokeSize { get; set; }
 
         /* State */
         void Save();

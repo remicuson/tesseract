@@ -5,19 +5,23 @@ namespace Tesseract.Graphics
 {
 	public class Font
 	{
+        internal static string defaultFamily = "sans-serif";
+        internal static double defaultSize = 12;
+
 		public Font()
 		{
-			
+            family = Font.defaultFamily;
+            size = Font.defaultSize;
 		}
 		
-		string family = "sans-serif";
+		string family;
 		public string Family
 		{
 			get { return family; }
 			set { family = value; }
 		}
 		
-		double size = 12;
+		double size;
 		public double Size
 		{
 			get { return size; }
