@@ -111,23 +111,23 @@ namespace Tesseract.Backends.Windows
             {
                 base.FormBorderStyle = value ? System.Windows.Forms.FormBorderStyle.Sizable : System.Windows.Forms.FormBorderStyle.None;
             
-                if (!value)
-                    Win32.SetWindowLong(this.Handle, Win32.GWL_EXSTYLE, Win32.WS_EX_LAYERED);
+                //if (!value)
+                //    Win32.SetWindowLong(this.Handle, Win32.GWL_EXSTYLE, Win32.WS_EX_LAYERED);
             }
 		}
 		
 		public void ReRender()
 		{
-            if (!Framed)
-                PerformRender();
+            //if (!Framed)
+            //    PerformRender();
 
 			base.Invalidate();
 		}
 		
 		public void ReRender(double L, double T, double R, double B)
 		{
-            if (!Framed)
-                PerformRender();
+            //if (!Framed)
+            //    PerformRender();
 
 			base.Invalidate(new System.Drawing.Rectangle((int)L, (int)T, (int)(R - L), (int)(B - T)));
 		}
@@ -199,17 +199,17 @@ namespace Tesseract.Backends.Windows
 
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
-            if (Framed)
-            {
+            //if (Framed)
+            //{
                 WindowsGraphics g = new WindowsGraphics(e.Graphics, W, H);
 
                 if (this.Render != null)
                     this.Render(this, new RenderEventArgs(g));
 
                 g.Dispose();
-            }
-            else
-                base.OnPaint(e);
+            //}
+            //else
+            //    base.OnPaint(e);
         }
 
         protected override void OnLoad(EventArgs e)
