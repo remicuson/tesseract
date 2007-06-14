@@ -4,9 +4,12 @@ using Tesseract.Controls;
 
 namespace Tesseract.Geometry
 {
+    /// <summary>
+    /// Represents the location of a control
+    /// </summary>
 	public class Location
 	{
-		public Location(Control C, Measurement L, Measurement T, Measurement R, Measurement B)
+		public Location(Control C, Distance L, Distance T, Distance R, Distance B)
 		{
 			this.control = C;
 			this.l = L;
@@ -18,65 +21,95 @@ namespace Tesseract.Geometry
 		public Location(): this(Tesseract.TIM.TIM.currentControl, null, null, null, null) { }
 		
 		Control control;
+        /// <summary>
+        /// The control associated with this location
+        /// </summary>
 		public Control Control
 		{
 			get { return control; }
-			set { control = value; }
+			set
+            {
+                control = value;
+
+                if (l != null)
+                    l.Control = value;
+                if (t != null)
+                    t.Control = value;
+                if (r != null)
+                    r.Control = value;
+                if (b != null)
+                    b.Control = value;
+            }
 		}
 		
-		Measurement l;
-		public Measurement L
+		Distance l;
+		public Distance L
 		{
 			get { return l; }
 			set
 			{
 				l = value;
-				
-				if (l != null)
-					l.Orientation = MeasurementOrientation.Horizontal;
+
+                if (l != null)
+                {
+                    l.Orientation = DistanceOrientation.Horizontal;
+                    l.Control = control;
+                }
 			}
 		}
 		
-		Measurement t;
-		public Measurement T
+		Distance t;
+		public Distance T
 		{
 			get { return t; }
 			set
 			{
 				t = value;
-				
-				if (t != null)
-					t.Orientation = MeasurementOrientation.Vertical;
+
+                if (t != null)
+                {
+                    t.Orientation = DistanceOrientation.Vertical;
+                    t.Control = control;
+                }
 			}
 		}
 		
-		Measurement r;
-		public Measurement R
+		Distance r;
+		public Distance R
 		{
 			get { return r; }
 			set
 			{
 				r = value;
-				
-				if (r != null)
-					r.Orientation = MeasurementOrientation.Horizontal;
+
+                if (r != null)
+                {
+                    r.Orientation = DistanceOrientation.Horizontal;
+                    r.Control = control;
+                }
 			}
 		}
 		
-		Measurement b;
-		public Measurement B
+		Distance b;
+		public Distance B
 		{
 			get { return b; }
 			set
 			{
 				b = value;
-				
-				if (b != null)
-					b.Orientation = MeasurementOrientation.Vertical;
+
+                if (b != null)
+                {
+                    b.Orientation = DistanceOrientation.Vertical;
+                    b.Control = control;
+                }
 			}
 		}
 		
-		public Measurement RealL
+        /// <summary>
+        /// The distance from the left of the controls parent at which to render the control
+        /// </summary>
+		public Distance RealL
 		{
 			get
 			{
@@ -98,8 +131,11 @@ namespace Tesseract.Geometry
 				return x;
 			}
 		}
-		
-		public Measurement RealT
+
+		/// <summary>
+		/// The distance from the top of the controls parent at which to render the control
+		/// </summary>
+		public Distance RealT
 		{
 			get
 			{
@@ -122,6 +158,9 @@ namespace Tesseract.Geometry
 			}
 		}
 		
+        /// <summary>
+        /// Resizes the controls path if the location dictates that the path is relative to the controls parents
+        /// </summary>
 		public void HandleRel()
 		{
 			if (l != null && r != null)
@@ -131,7 +170,12 @@ namespace Tesseract.Geometry
 				control.Path.H = control.Parent.Path.H - Math.Max(b, control.Margin.B) - Math.Max(t, control.Margin.T);
 		}
 		
-		public void Offset(Measurement X, Measurement Y)
+        /// <summary>
+        /// Offsets the location by a given amount
+        /// </summary>
+        /// <param name="X">The distance to offset the location horizontally</param>
+        /// <param name="Y">The distance to offset the location vertically</param>
+		public void Offset(Distance X, Distance Y)
 		{
 			if (l != null)
 				l += X;
@@ -144,9 +188,22 @@ namespace Tesseract.Geometry
 				b -= Y;
 		}
 		
+        /// <summary>
+        /// Creates an exact copy of this location
+        /// </summary>
+        /// <returns></returns>
 		public Location Clone()
 		{
 			return new Location(control, l, t, r, b);
 		}
+
+        public override string ToString()
+        {
+            return string.Format("Location[{0},{1}  {2},{3}]", 
+                (l != null) ? l.Pixels.ToString() : "null",
+                (t != null) ? t.Pixels.ToString(): "null",
+                (r != null) ? r.Pixels.ToString() : "null",
+                (b != null) ? b.Pixels.ToString() : "null");
+        }
 	}
 }

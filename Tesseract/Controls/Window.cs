@@ -6,7 +6,7 @@ using Tesseract.Graphics;
 
 namespace Tesseract.Controls
 {
-	public class Window: MouseStateControl
+	public class Window: Control
 	{
 		internal IWindow backendWindow;
 		
@@ -27,8 +27,6 @@ namespace Tesseract.Controls
             
             this.renderLocation = new Location(this, 0, 0, null, null);
             this.Font = new Font();
-            
-            Core.themer.InitWindow(this);
 		}
 
         void backendMouseMove(object sender, MouseEventArgs e)
@@ -93,12 +91,12 @@ namespace Tesseract.Controls
             set
             {
                 if (activeControl != null)
-                    activeControl.Active = false;
+                    activeControl.OnDeactivate();
 
                 activeControl = value;
 
                 if (activeControl != null)
-                    activeControl.Active = true;
+                    activeControl.OnActivate();
             }
         }
 		
@@ -196,10 +194,5 @@ namespace Tesseract.Controls
 			
 			return null;
 		}
-
-        public override void RenderControl(IGraphics g)
-        {
-            Core.themer.RenderWindow(this, g);
-        }
 	}
 }

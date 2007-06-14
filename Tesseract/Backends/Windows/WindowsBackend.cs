@@ -49,10 +49,5 @@ namespace Tesseract.Backends.Windows
 		{
 			return new WindowsGraphics();
 		}
-		
-		public IThemer NativeThemer()
-		{
-			return new WindowsThemer();
-		}
 	}
 }

@@ -5,6 +5,9 @@ using Tesseract.Graphics;
 
 namespace Tesseract.Backends.Windows
 {
+    /// <summary>
+    /// A backend graphics interface targetting System.Drawing (GDI+) used to draw on a WindowsWindow
+    /// </summary>
 	public class WindowsGraphics: IGraphics
 	{
 		internal System.Drawing.Graphics graphics;
@@ -28,8 +31,6 @@ namespace Tesseract.Backends.Windows
             fontsize.Add(12);
             path.Add(new System.Drawing.Drawing2D.GraphicsPath());
             strokesize.Add(1);
-
-            //graphics.SetClip(new System.Drawing.RectangleF(0, 0, (float)w, (float)h));
 		}
 		
 		public WindowsGraphics(): this(System.Drawing.Graphics.FromImage(new System.Drawing.Bitmap(10, 10)), 10, 10) { }

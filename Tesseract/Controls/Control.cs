@@ -3,13 +3,31 @@ using Tesseract.Backends;
 using Tesseract.Events;
 using Tesseract.Geometry;
 using Tesseract.Graphics;
+using Tesseract.Theming;
 
 namespace Tesseract.Controls
 {
 	public enum DisplayMode { Block, Inline, Flow }
+
+    [Flags]
+    public enum ControlState: byte
+    {
+        Normal = 1,
+        Over = 2,
+        Down = 4,
+        Active = 8,
+        Disabled = 16
+    }
 	
 	public class Control
 	{
+        public event EventHandler Activate;
+        public event EventHandler Deactivate;
+        public event EventHandler MouseEnter;
+        public event EventHandler MouseLeave;
+        public event EventHandler<MouseEventArgs> MousePress;
+        public event EventHandler<MouseEventArgs> MouseRelease;
+        public event EventHandler<MouseEventArgs> MouseMove;
 		public event EventHandler<RenderEventArgs> Render;
 		
 		internal Location renderLocation;
@@ -68,6 +86,42 @@ namespace Tesseract.Controls
 				return (Window)c;
 			}
 		}
+
+        IThemer themer;
+        public IThemer Themer
+        {
+            get { return (themer != null) ? themer : Core.defaultThemer; }
+            set
+            {
+                themer = value;
+
+                if (themer != null)
+                    themer.InitControl(this);
+
+                AutoReRender();
+            }
+        }
+
+        object themerdata;
+        public object ThemerData
+        {
+            get { return themerdata; }
+            set { themerdata = value; }
+        }
+
+        object userdata;
+        public object UserData
+        {
+            get { return userdata; }
+            set { userdata = value; }
+        }
+
+        string style;
+        public string Style
+        {
+            get { return style; }
+            set { style = value; }
+        }
 		
 		Location location;
 		public virtual Location Location
@@ -140,19 +194,22 @@ namespace Tesseract.Controls
 			}
 			set { font = value; }
 		}
+
+        ControlState state = ControlState.Normal;
+        public ControlState State
+        {
+            get { return state; }
+            set { state = value; }
+        }
 		
-		bool mouseover;
 		public virtual bool MouseOver
 		{
-			get { return mouseover; }
-			set { mouseover = value; }
+			get { return (state & ControlState.Over) == ControlState.Over; }
 		}
 		
-		bool mousedown;
 		public virtual bool MouseDown
 		{
-			get { return mousedown; }
-			set { mousedown = value; }
+			get { return (state & ControlState.Down) == ControlState.Down; }
 		}
 		
 		bool visible = true;
@@ -169,45 +226,9 @@ namespace Tesseract.Controls
             set { windowdrag = value; }
         }
 		
-		PatternList background;
-		public PatternList Background
-		{
-			get { return background; }
-			set { background = value; }
-		}
-		
-		PatternList activebackground;
-		public PatternList ActiveBackground
-		{
-			get { return activebackground; }
-			set { activebackground = value; }
-		}
-		
-		double activeopacity = 0;
-		public double ActiveOpacity
-		{
-			get { return activeopacity; }
-			set { activeopacity = value; }
-		}
-		
-		bool autoactiveopacity = true;
-		public bool AutoActiveOpacity
-		{
-			get { return autoactiveopacity; }
-			set { autoactiveopacity = value; }
-		}
-		
-		bool active;
 		public virtual bool Active
 		{
-			get { return active; }
-			set
-			{
-				active = value;
-				
-				if (autoactiveopacity)
-					activeopacity = value ? 1 : 0;
-			}
+			get { return (state & ControlState.Active) == ControlState.Active; }
 		}
 		
 		internal void AutoReRender()
@@ -223,6 +244,30 @@ namespace Tesseract.Controls
 		
 		public virtual void OnRender(RenderEventArgs e)
 		{
+            if (themerdata == null)
+            {
+                Themer.InitControl(this);
+
+                string[] styles = Themer.GetStyles(this);
+
+                if (styles.Length > 0)
+                {
+                    bool set = false;
+
+                    foreach (string style in styles)
+                    {
+                        if (style.ToLower() == "Default")
+                        {
+                            Themer.SetStyle(this, style);
+                            set = true;
+                        }
+                    }
+
+                    if (!set)
+                        Themer.SetStyle(this, styles[0]);
+                }
+            }
+
             e.Graphics.Save();
 
             try
@@ -237,7 +282,7 @@ namespace Tesseract.Controls
                     if (this.Render != null)
                         this.Render(this, e);
                     else
-                        RenderControl(e.Graphics);
+                        Themer.RenderControl(this, e.Graphics);
                 }
 
                 this.Path.Apply(e.Graphics);
@@ -251,12 +296,25 @@ namespace Tesseract.Controls
                 e.Graphics.Restore();
             }
 		}
-		
-		public virtual void RenderControl(IGraphics g)
-		{
-			
-		}
-		
+
+        public virtual void OnActivate()
+        {
+            state |= ControlState.Active;
+            AutoReRender();
+
+            if (this.Activate != null)
+                this.Activate(this, EventArgs.Empty);
+        }
+
+        public virtual void OnDeactivate()
+        {
+            state &= ~ControlState.Active;
+            AutoReRender();
+
+            if (this.Deactivate != null)
+                this.Deactivate(this, EventArgs.Empty);
+        }
+
 		public virtual void OnChildAdded(Control child)
 		{
 			PositionChildren();
@@ -280,31 +338,44 @@ namespace Tesseract.Controls
 		
 		public virtual void OnMouseEnter()
 		{
-			MouseOver = true;
+            state |= ControlState.Over;
 			AutoReRender();
+
+            if (this.MouseEnter != null)
+                this.MouseEnter(this, EventArgs.Empty);
 		}
 		
 		public virtual void OnMouseLeave()
 		{
-			MouseOver = false;
+            state &= ~ControlState.Over;
 			AutoReRender();
+
+            if (this.MouseLeave != null)
+                this.MouseLeave(this, EventArgs.Empty);
 		}
 		
 		public virtual void OnMouseMove(MouseEventArgs e)
 		{
-		
+            if (this.MouseMove != null)
+                this.MouseMove(this, e);
 		}
 		
 		public virtual void OnMousePress(MouseEventArgs e)
 		{
-			MouseDown = true;
+            state |= ControlState.Down;
 			AutoReRender();
+
+            if (this.MousePress != null)
+                this.MousePress(this, e);
 		}
 		
 		public virtual void OnMouseRelease(MouseEventArgs e)
 		{
-			MouseDown = false;
+            state &= ~ControlState.Down;
 			AutoReRender();
+
+            if (this.MouseRelease != null)
+                this.MouseRelease(this, e);
 		}
 		
 		public virtual void OnMove()
@@ -317,7 +388,7 @@ namespace Tesseract.Controls
 			PositionChildren();
 		}
 		
-		public virtual bool StealChildMouse(Control child, Measurement X, Measurement Y)
+		public virtual bool StealChildMouse(Control child, Distance X, Distance Y)
 		{
 			return false;
 		}

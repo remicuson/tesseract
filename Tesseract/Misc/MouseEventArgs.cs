@@ -7,7 +7,7 @@ namespace Tesseract.Events
 	
 	public class MouseEventArgs: EventArgs
 	{
-		public MouseEventArgs(MouseButton B, Measurement X, Measurement Y)
+		public MouseEventArgs(MouseButton B, Distance X, Distance Y)
 		{
 			this.btn = B;
 			this.x = X;
@@ -21,15 +21,15 @@ namespace Tesseract.Events
 			set { btn = value; }
 		}
 		
-		Measurement x;
-		public Measurement X
+		Distance x;
+		public Distance X
 		{
 			get { return x; }
 			set { x = value; }
 		}
 		
-		Measurement y;
-		public Measurement Y
+		Distance y;
+		public Distance Y
 		{
 			get { return y; }
 			set { y = value; }

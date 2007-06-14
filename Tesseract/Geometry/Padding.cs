@@ -7,7 +7,7 @@ namespace Tesseract.Geometry
     [TypeConverter(typeof(PaddingConverter))]
 	public class Padding
 	{
-		public Padding(Control C, Measurement L, Measurement T, Measurement R, Measurement B)
+		public Padding(Control C, Distance L, Distance T, Distance R, Distance B)
 		{
 			this.control = C;
 			this.l = L;
@@ -23,8 +23,8 @@ namespace Tesseract.Geometry
 			set { control = value; }
 		}
 		
-		Measurement l;
-		public Measurement L
+		Distance l;
+		public Distance L
 		{
 			get { return l; }
 			set
@@ -32,12 +32,12 @@ namespace Tesseract.Geometry
 				l = value;
 				
 				if (l != null)
-					l.Orientation = MeasurementOrientation.Horizontal;
+					l.Orientation = DistanceOrientation.Horizontal;
 			}
 		}
 		
-		Measurement t;
-		public Measurement T
+		Distance t;
+		public Distance T
 		{
 			get { return t; }
 			set
@@ -45,12 +45,12 @@ namespace Tesseract.Geometry
 				t = value;
 				
 				if (t != null)
-					t.Orientation = MeasurementOrientation.Vertical;
+					t.Orientation = DistanceOrientation.Vertical;
 			}
 		}
 		
-		Measurement r;
-		public Measurement R
+		Distance r;
+		public Distance R
 		{
 			get { return r; }
 			set
@@ -58,12 +58,12 @@ namespace Tesseract.Geometry
 				r = value;
 				
 				if (r != null)
-					r.Orientation = MeasurementOrientation.Horizontal;
+					r.Orientation = DistanceOrientation.Horizontal;
 			}
 		}
 		
-		Measurement b;
-		public Measurement B
+		Distance b;
+		public Distance B
 		{
 			get { return b; }
 			set
@@ -71,7 +71,7 @@ namespace Tesseract.Geometry
 				b = value;
 				
 				if (b != null)
-					b.Orientation = MeasurementOrientation.Vertical;
+					b.Orientation = DistanceOrientation.Vertical;
 			}
 		}
 

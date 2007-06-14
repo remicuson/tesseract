@@ -29,9 +29,6 @@ namespace Tesseract.TIM
 			foreach (XmlNode n in xmlRoot)
 				if (n.NodeType == XmlNodeType.Element)
 					xmlRootControl = (XmlElement)n;
-			
-			GenerateTypeList(Assembly.GetExecutingAssembly());
-			GenerateTypeList(Assembly.GetEntryAssembly());
 		}
 		
 		public void Load(object obj)
@@ -56,6 +53,9 @@ namespace Tesseract.TIM
 			
 			foreach (XmlNode n in xml)
 			{
+                if (n.NodeType == XmlNodeType.Comment)
+                    continue;
+
 				if (n.NodeType == XmlNodeType.Text)
 				{
 					LoadText(obj, n.Value);
@@ -63,10 +63,10 @@ namespace Tesseract.TIM
 				}
 				if (LoadProperty(obj, n))
 					continue;
-				
-				if (FindType(n.LocalName) != null)
+
+                if (TypeStore.Find(n.LocalName) != null)
 				{
-					object childobj = Activator.CreateInstance(FindType(n.LocalName));
+                    object childobj = Activator.CreateInstance(TypeStore.Find(n.LocalName));
 					Load(childobj, n);
 					AddChild(childobj, obj);
 				}
@@ -75,37 +75,43 @@ namespace Tesseract.TIM
 		
 		bool LoadProperty(object obj, XmlNode xml)
 		{
-			PropertyInfo pinfo = obj.GetType().GetProperty(xml.LocalName);
-			
-			if (pinfo == null)
-				return false;
-				
-			TypeConverter tc = TypeDescriptor.GetConverter(pinfo.PropertyType);
-			if (tc.CanConvertFrom(typeof(string)) && !string.IsNullOrEmpty(NodeValue(xml)))
-			{
-				pinfo.SetValue(obj, tc.ConvertFrom(NodeValue(xml)), null);
-			}
-			else
-			{
-				object val = pinfo.GetValue(obj, null);
-			
-				if (val is PatternList)
-					val = new PatternList(((PatternList)val).Control);
-				else if ((val == null) || (val.GetType().GetInterface("IList") != null))
-					val = Activator.CreateInstance(pinfo.PropertyType);
-                else if ((xml.ChildNodes.Count == 1) && (FindType(xml.ChildNodes[0].LocalName) != null))
-                {
-                    xml = xml.ChildNodes[0];
-                    val = Activator.CreateInstance(FindType(xml.LocalName));
+            try
+            {
+                PropertyInfo pinfo = obj.GetType().GetProperty(xml.LocalName);
 
+                if (pinfo == null)
+                    return false;
+
+                TypeConverter tc = TypeDescriptor.GetConverter(pinfo.PropertyType);
+                if (tc.CanConvertFrom(typeof(string)) && !string.IsNullOrEmpty(NodeValue(xml)))
+                {
+                    pinfo.SetValue(obj, tc.ConvertFrom(NodeValue(xml)), null);
+                }
+                else
+                {
+                    object val = pinfo.GetValue(obj, null);
+
+                    if ((val == null) || (val.GetType().GetInterface("IList") != null))
+                        val = Activator.CreateInstance(pinfo.PropertyType);
+                    else if ((xml.ChildNodes.Count == 1) && (TypeStore.Find(xml.ChildNodes[0].LocalName) != null))
+                    {
+                        xml = xml.ChildNodes[0];
+                        val = Activator.CreateInstance(TypeStore.Find(xml.LocalName));
+
+                    }
+
+                    Load(val, xml);
+
+                    pinfo.SetValue(obj, val, null);
                 }
 
-				Load(val, xml);
-			
-				pinfo.SetValue(obj, val, null);
-			}
-			
-			return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Error(string.Format("Unable to load property '{0}'\n", xml.Name, ex.Message));
+                return false;
+            }
 		}
 		
 		void LoadText(object obj, string text)
@@ -118,39 +124,13 @@ namespace Tesseract.TIM
 			lbl.Text = text;
 			((Control)obj).Children.Add(lbl);
 		}
-		
+
 		void AddChild(object child, object parent)
 		{
             if (parent is Control && child is Control)
                 ((Control)parent).Children.Add((Control)child);
-            else if (parent is LinearGradient && child is GradientStop)
-                ((LinearGradient)parent).Add((GradientStop)child);
-            else if (parent is RadialGradient && child is GradientStop)
-                ((RadialGradient)parent).Add((GradientStop)child);
             else if (parent.GetType().GetInterface("IList") != null)
                 parent.GetType().GetMethod("Add").Invoke(parent, new object[] { child });
-		}
-		
-		void GenerateTypeList(Assembly a)
-		{
-			Type[] types = a.GetTypes();
-			
-			foreach (Type type in types)
-			{
-				if (typeDict.ContainsKey(type.Name))
-					continue;
-				
-				typeDict.Add(type.Name, type);
-			}
-		}
-		
-		Type FindType(string Name)
-		{
-			if (typeDict.ContainsKey(Name))
-				return typeDict[Name];
-			
-			Debug.Error("Unable to Find Type: " + Name);
-			return null;
 		}
 		
 		string NodeValue(XmlNode n)
