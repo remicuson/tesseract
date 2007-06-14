@@ -10,18 +10,20 @@ namespace Tesseract
 	{
 		internal static IBackend backend;
 		internal static IGraphics internalGraphics;
-		internal static IThemer themer;
+        internal static IThemer defaultThemer;
 		
 		public static void Init()
 		{
 			Debug.Info("Tesseract v" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			Debug.Indent();
-			
+
+            TypeStore.Init();
+
 			SelectBackend();
 			
 			backend.Init();
 			internalGraphics = backend.InternalGraphics();
-			themer = backend.NativeThemer();
+            defaultThemer = new Theming.DefaultThemer();
 		}
 		
 		public static void Done()

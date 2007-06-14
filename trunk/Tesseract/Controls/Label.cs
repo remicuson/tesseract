@@ -10,8 +10,6 @@ namespace Tesseract.Controls
 		public Label()
 		{
 			this.AutoSize = true;
-			
-			Core.themer.InitLabel(this);
 		}
 		
 		string text;
@@ -26,11 +24,6 @@ namespace Tesseract.Controls
 		{
 			get { return textfill; }
 			set { textfill = value; }
-		}
-		
-		public override void RenderControl(IGraphics g)
-		{
-			Core.themer.RenderLabel(this, g);
 		}
 		
 		public override void HandleAutoSize()

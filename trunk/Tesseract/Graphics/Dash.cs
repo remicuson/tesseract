@@ -6,7 +6,7 @@ namespace Tesseract.Graphics
 {
 	public class Dash: Solid
 	{
-		public Dash(Color C, Measurement Size): base(C)
+		public Dash(Color C, Distance Size): base(C)
 		{
 			this.size = Size;
 		}
@@ -14,8 +14,8 @@ namespace Tesseract.Graphics
 		public Dash(Color C): this(C, 8) { }
 		public Dash(): this(Colors.White) { }
 		
-		Measurement size;
-		public Measurement Size
+		Distance size;
+		public Distance Size
 		{
 			get { return size; }
 			set { size = value; }

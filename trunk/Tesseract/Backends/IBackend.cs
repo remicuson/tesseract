@@ -3,6 +3,9 @@ using Tesseract.Theming;
 
 namespace Tesseract.Backends
 {
+    /// <summary>
+    /// Interface implemented by platform specific backends
+    /// </summary>
 	public interface IBackend
 	{
 		bool CanUse();
@@ -13,7 +16,5 @@ namespace Tesseract.Backends
 		void Done();
 		
 		IGraphics InternalGraphics();
-		
-		IThemer NativeThemer();
 	}
 }

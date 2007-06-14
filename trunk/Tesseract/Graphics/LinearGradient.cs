@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Tesseract.Backends;
 using Tesseract.Geometry;
+using System.ComponentModel;
 
 namespace Tesseract.Graphics
 {
 	public enum LinearGradientOrientation { Horizontal, Vertical, Diagonal }
+
 	public class LinearGradient: Pattern
 	{
 		public LinearGradient(LinearGradientOrientation o)

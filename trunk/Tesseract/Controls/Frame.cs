@@ -4,16 +4,11 @@ using Tesseract.Graphics;
 
 namespace Tesseract.Controls
 {
-	public class Frame: MouseStateControl
+	public class Frame: Control
 	{
 		public Frame(): base()
 		{
-			Core.themer.InitFrame(this);
-		}
-		
-		public override void RenderControl(IGraphics g)
-		{
-			Core.themer.RenderFrame(this, g);
+
 		}
 
         public override bool CanActivate()
