@@ -1,5 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Theme>
+
+  <Style Name="Custom" Type="Button" State="Normal">
+    <Fill>
+      <LinearGradient Orientation="Vertical">
+        <GradientStop Stop="0" Color="Blue"/>
+        <GradientStop Stop="1" Color="Green"/>
+      </LinearGradient>
+    </Fill>
+    <Stroke>
+      <Solid Color="Gray"/>
+    </Stroke>
+  </Style>
+  
   <Style Name="Default" Type="Button" State="Normal">
     <Fill>
       <LinearGradient Orientation="Vertical">
@@ -15,8 +28,8 @@
   <Style Name="Default" Type="Button" State="Over">
     <Fill>
       <LinearGradient Orientation="Vertical">
-        <GradientStop Stop="0" Color="Honeydew"/>
-        <GradientStop Stop="1" Color="Honeydew2"/>
+        <GradientStop Stop="0" Color="Honeydew2"/>
+        <GradientStop Stop="1" Color="LightGray"/>
       </LinearGradient>
     </Fill>
     <Stroke>
@@ -33,6 +46,14 @@
     </Fill>
     <Stroke>
       <Solid Color="Gray"/>
+    </Stroke>
+  </Style>
+
+  <Style Name="Default" Type="Button" State="Active">
+    <Stroke>
+      <Location L="3px" T="3px" R="3px" B="3px"/>
+      <Rectangle/>
+      <Dash Color="DarkGray" Size="3px"/>
     </Stroke>
   </Style>
 

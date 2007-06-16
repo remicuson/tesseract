@@ -9,7 +9,7 @@ using Tesseract.Graphics;
 
 namespace Tesseract.TIM
 {
-	public class TIMLoader
+	internal class TIMLoader: XMLLoader
 	{
 		XmlElement xmlRoot;
 		XmlElement xmlRootControl;
@@ -33,84 +33,42 @@ namespace Tesseract.TIM
 		
 		public void Load(object obj)
 		{
-			Load(obj, xmlRootControl);
+            Load(xmlRootControl, obj);
             TIM.currentControl = null;
 		}
 		
-		public void Load(object obj, XmlNode xml)
+		public override void Load(XmlNode xml, object o)
 		{
-			if (obj is Control)
-				TIM.currentControl = (Control)obj;
-			
-			if (xml.Attributes != null)
-			{
-				foreach (XmlNode n in xml.Attributes)
-				{
-					if (LoadProperty(obj, n))
-						continue;
-				}
-			}
-			
-			foreach (XmlNode n in xml)
-			{
+			if (o is Control)
+				TIM.currentControl = (Control)o;
+
+            if (xml.Attributes != null)
+            {
+                foreach (XmlNode n in xml.Attributes)
+                {
+                    if (LoadProperty(o, n))
+                        continue;
+                }
+            }
+
+            foreach (XmlNode n in xml)
+            {
                 if (n.NodeType == XmlNodeType.Comment)
                     continue;
 
-				if (n.NodeType == XmlNodeType.Text)
-				{
-					LoadText(obj, n.Value);
-					continue;
-				}
-				if (LoadProperty(obj, n))
-					continue;
-
-                if (TypeStore.Find(n.LocalName) != null)
-				{
-                    object childobj = Activator.CreateInstance(TypeStore.Find(n.LocalName));
-					Load(childobj, n);
-					AddChild(childobj, obj);
-				}
-			}
-		}
-		
-		bool LoadProperty(object obj, XmlNode xml)
-		{
-            try
-            {
-                PropertyInfo pinfo = obj.GetType().GetProperty(xml.LocalName);
-
-                if (pinfo == null)
-                    return false;
-
-                TypeConverter tc = TypeDescriptor.GetConverter(pinfo.PropertyType);
-                if (tc.CanConvertFrom(typeof(string)) && !string.IsNullOrEmpty(NodeValue(xml)))
+                if (n.NodeType == XmlNodeType.Text)
                 {
-                    pinfo.SetValue(obj, tc.ConvertFrom(NodeValue(xml)), null);
-                }
-                else
-                {
-                    object val = pinfo.GetValue(obj, null);
-
-                    if ((val == null) || (val.GetType().GetInterface("IList") != null))
-                        val = Activator.CreateInstance(pinfo.PropertyType);
-                    else if ((xml.ChildNodes.Count == 1) && (TypeStore.Find(xml.ChildNodes[0].LocalName) != null))
-                    {
-                        xml = xml.ChildNodes[0];
-                        val = Activator.CreateInstance(TypeStore.Find(xml.LocalName));
-
-                    }
-
-                    Load(val, xml);
-
-                    pinfo.SetValue(obj, val, null);
+                    LoadText(o, n.Value);
+                    continue;
                 }
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Error(string.Format("Unable to load property '{0}'\n", xml.Name, ex.Message));
-                return false;
+                if (LoadProperty(o, n))
+                    continue;
+
+                object child = base.Load(n);
+
+                if (child != null)
+                    HandleChild(o, child);
             }
 		}
 		
@@ -125,20 +83,12 @@ namespace Tesseract.TIM
 			((Control)obj).Children.Add(lbl);
 		}
 
-		void AddChild(object child, object parent)
-		{
+        public override void HandleChild(object parent, object child)
+        {
             if (parent is Control && child is Control)
                 ((Control)parent).Children.Add((Control)child);
-            else if (parent.GetType().GetInterface("IList") != null)
-                parent.GetType().GetMethod("Add").Invoke(parent, new object[] { child });
-		}
-		
-		string NodeValue(XmlNode n)
-		{
-			if (n.NodeType == XmlNodeType.Attribute)
-				return n.Value;
-			
-			return n.InnerText;
-		}
+            else
+                base.HandleChild(parent, child);
+        }
 	}
 }

@@ -120,7 +120,11 @@ namespace Tesseract.Controls
         public string Style
         {
             get { return style; }
-            set { style = value; }
+            set
+            {
+                style = value;
+                Themer.SetStyle(this, value);
+            }
         }
 		
 		Location location;
@@ -248,23 +252,26 @@ namespace Tesseract.Controls
             {
                 Themer.InitControl(this);
 
-                string[] styles = Themer.GetStyles(this);
-
-                if (styles.Length > 0)
+                if (string.IsNullOrEmpty(this.style))
                 {
-                    bool set = false;
+                    string[] styles = Themer.GetStyles(this);
 
-                    foreach (string style in styles)
+                    if (styles.Length > 0)
                     {
-                        if (style.ToLower() == "Default")
-                        {
-                            Themer.SetStyle(this, style);
-                            set = true;
-                        }
-                    }
+                        bool set = false;
 
-                    if (!set)
-                        Themer.SetStyle(this, styles[0]);
+                        foreach (string style in styles)
+                        {
+                            if (style.ToLower() == "default")
+                            {
+                                this.Style = style;
+                                set = true;
+                            }
+                        }
+
+                        if (!set)
+                            this.Style = styles[0];
+                    }
                 }
             }
 

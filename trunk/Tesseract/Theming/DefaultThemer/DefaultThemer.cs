@@ -51,6 +51,8 @@ namespace Tesseract.Theming
             List<Location> locations = new List<Location>();
             List<Path> paths = new List<Path>();
 
+            XMLStyleLoader xl = new XMLStyleLoader();
+
             foreach (XmlNode child in style)
             {
                 Pattern ptn = null;
@@ -62,12 +64,14 @@ namespace Tesseract.Theming
                     if (child2.NodeType != XmlNodeType.Element)
                         continue;
 
-                    if (ptn == null)
-                        ptn = LoadPattern((XmlElement)child2);
-                    if (loc == null)
-                        loc = LoadLocation((XmlElement)child2);
-                    if (pth == null)
-                        pth = LoadPath((XmlElement)child2);
+                    object obj = xl.Load(child2);
+
+                    if (obj is Pattern)
+                        ptn = (Pattern)obj;
+                    if (obj is Location)
+                        loc = (Location)obj;
+                    if (obj is Path)
+                        pth = (Path)obj;
                 }
 
                 if (ptn == null)
@@ -86,53 +90,6 @@ namespace Tesseract.Theming
             styleOperations.Add(plist);
             styleLocations.Add(locations);
             stylePaths.Add(paths);
-        }
-
-        Location LoadLocation(XmlElement n)
-        {
-            if (n.LocalName == "Location")
-                return new Location(null,
-                    Distance.FromString(n.GetAttribute("L")),
-                    Distance.FromString(n.GetAttribute("T")),
-                    Distance.FromString(n.GetAttribute("R")),
-                    Distance.FromString(n.GetAttribute("B")));
-
-            return null;
-        }
-
-        Path LoadPath(XmlElement n)
-        {
-            if (n.LocalName == "Rectangle")
-                return new Rectangle(Distance.FromString(n.GetAttribute("W")), Distance.FromString(n.GetAttribute("H")));
-
-            return null;
-        }
-
-        Pattern LoadPattern(XmlElement n)
-        {
-            if (n.LocalName == "Solid")
-                return new Solid(Color.FromString(n.GetAttribute("Color")));
-
-            if (n.LocalName == "LinearGradient")
-            {
-                LinearGradient lg = new LinearGradient((LinearGradientOrientation)Enum.Parse(typeof(LinearGradientOrientation), n.GetAttribute("Orientation")));
-
-                foreach (XmlNode child in n)
-                {
-                    if (child.LocalName != "GradientStop")
-                        continue;
-
-                    GradientStop stop = new GradientStop(
-                        double.Parse(((XmlElement)child).GetAttribute("Stop")),
-                        Color.FromString(((XmlElement)child).GetAttribute("Color")));
-
-                    lg.Add(stop);
-                }
-
-                return lg;
-            }
-
-            return null;
         }
 
         public override void InitControl(Control c)
@@ -158,7 +115,7 @@ namespace Tesseract.Theming
 
         public override void SetStyle(Control c, string style)
         {
-            c.ThemerData = style;
+            
         }
 
         public override void RenderControl(Control c, IGraphics g)
@@ -168,7 +125,7 @@ namespace Tesseract.Theming
                 List<Location> locs = styleLocations[i];
                 List<Path> paths = stylePaths[i];
 
-                if (styleNames[i] != (string)c.ThemerData)
+                if (styleNames[i] != (string)c.Style)
                     continue;
                 if (styleTypes[i] != c.GetType())
                 {

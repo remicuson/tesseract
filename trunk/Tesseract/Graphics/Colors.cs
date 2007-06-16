@@ -2,26 +2,164 @@ using System;
 
 namespace Tesseract.Graphics
 {
+    /// <summary>
+    /// Provides named colors
+    /// </summary>
 	public static class Colors
 	{
-		public static Color Black           { get { return new Color(1, 0, 0, 0); } }
-		public static Color Blue            { get { return new Color(1, 0, 0, 1); } }
-		public static Color Gray            { get { return new Color(1, 0.75, 0.75, 0.75); } }
-		public static Color Green           { get { return new Color(1, 0, 1, 0); } }
-		public static Color Honeydew        { get { return new Color(1, 0.94, 1, 0.94); } }
-		public static Color Honeydew2       { get { return new Color(1, 0.96, 1, 0.88); } }
-		public static Color Honeydew3       { get { return new Color(1, 0.76, 0.8, 0.76); } }
-		public static Color Honeydew4       { get { return new Color(1, 0.51, 0.55, 0.51); } }
-		public static Color LightBlue       { get { return new Color(1, 0.68, 0.85, 0.9); } }
-		public static Color LightGray       { get { return new Color(1, 0.83, 0.83, 0.83); } }
-		public static Color Orange          { get { return new Color(1, 1, 0.65, 0); } }
-		public static Color PowderBlue      { get { return new Color(1, 0.7, 0.88, 0.9); } }
-		public static Color Purple          { get { return new Color(1, 0.63, 0.13, 0.94); } }
-		public static Color Red             { get { return new Color(1, 1, 0, 0); } }
-		public static Color RoyalBlue       { get { return new Color(1, 0.25, 0.41, 0.88); } }
-		public static Color SteelBlue       { get { return new Color(1, 0.27, 0.51, 0.71); } }
-        public static Color Transparent     { get { return new Color(0, 1, 1, 1); } }
-        public static Color White           { get { return new Color(1, 1, 1, 1); } }
-        public static Color Yellow          { get { return new Color(1, 1, 1, 0); } }
-	}
+        // Colors Taken From http://www.tayloredmktg.com/rgb/
+
+        public static Color AliceBlue 	                { get { return Color.FromBytes(240, 248, 255); } }
+        public static Color AntiqueWhite                { get { return Color.FromBytes(250, 235, 215); } }
+        public static Color AntiqueWhite2               { get { return Color.FromBytes(238, 223, 204); } }
+        public static Color AntiqueWhite3               { get { return Color.FromBytes(205, 192, 176); } }
+        public static Color AntiqueWhite4               { get { return Color.FromBytes(139, 131, 120); } }
+        public static Color Aquamarine                  { get { return Color.FromBytes(127, 255, 212); } }
+        public static Color Azure 	                    { get { return Color.FromBytes(240, 255, 255); } }
+        public static Color Beige                       { get { return Color.FromBytes(245, 245, 220); } }
+        public static Color Bisque                      { get { return Color.FromBytes(255, 228, 196); } }
+        public static Color Bisque2                     { get { return Color.FromBytes(238, 213, 183); } }
+        public static Color Bisque3                     { get { return Color.FromBytes(205, 183, 158); } }
+        public static Color Bisque4                     { get { return Color.FromBytes(139, 125, 107); } }
+        public static Color Black                       { get { return Color.FromBytes(0, 0, 0); } }
+        public static Color BlanchedAlmond              { get { return Color.FromBytes(255, 235, 205); } }
+        public static Color Blue                        { get { return Color.FromBytes(0, 0, 255); } }
+        public static Color BlueViolet                  { get { return Color.FromBytes(138, 43, 226); } }
+        public static Color Brown                       { get { return Color.FromBytes(165, 42, 42); } }
+        public static Color Burlywood                   { get { return Color.FromBytes(222, 184, 135); } }
+        public static Color CadetBlue                   { get { return Color.FromBytes(95, 158, 160); } }
+        public static Color Chartreuse                  { get { return Color.FromBytes(127, 255, 0); } }
+        public static Color Chocolate                   { get { return Color.FromBytes(210, 105, 30); } }
+        public static Color Coral                       { get { return Color.FromBytes(255, 127, 80); } }
+        public static Color CornflowerBlue              { get { return Color.FromBytes(100, 149, 237); } }
+        public static Color Cornsilk                	{ get { return Color.FromBytes(255, 248, 220); } } 
+        public static Color Cornsilk2 	                { get { return Color.FromBytes(238, 232, 205); } }
+        public static Color Cornsilk3 	                { get { return Color.FromBytes(205, 200, 177); } }
+        public static Color Cornsilk4 	                { get { return Color.FromBytes(139, 136, 120); } }
+        public static Color Cyan                        { get { return Color.FromBytes(0, 255, 255); } }
+        public static Color DarkGoldenrod               { get { return Color.FromBytes(184, 134, 11); } }
+        public static Color DarkGreen                   { get { return Color.FromBytes(0, 100, 0); } }
+        public static Color DarkKhaki                   { get { return Color.FromBytes(189, 183, 107); } }
+        public static Color DarkOliveGreen              { get { return Color.FromBytes(85, 107, 47); } }
+        public static Color DarkOrange                  { get { return Color.FromBytes(255, 140, 0); } }
+        public static Color DarkOrchid                  { get { return Color.FromBytes(153, 50, 204); } }
+        public static Color DarkSalmon                  { get { return Color.FromBytes(233, 150, 122); } }
+        public static Color DarkSeaGreen                { get { return Color.FromBytes(143, 188, 143); } }
+        public static Color DarkSlateBlue               { get { return Color.FromBytes(72, 61, 139); } }
+        public static Color DarkSlateGray               { get { return Color.FromBytes(49, 79, 79); } }
+        public static Color DarkTurquoise               { get { return Color.FromBytes(0, 206, 209); } }
+        public static Color DarkViolet                  { get { return Color.FromBytes(148, 0, 211); } }
+        public static Color DeepPink                    { get { return Color.FromBytes(255, 20, 147); } }
+        public static Color DeepSkyBlue                 { get { return Color.FromBytes(0, 191, 255); } }
+        public static Color DimGray                     { get { return Color.FromBytes(105, 105, 105); } }
+        public static Color DodgerBlue                  { get { return Color.FromBytes(30, 144, 255); } }
+        public static Color Firebrick                   { get { return Color.FromBytes(178, 34, 34); } }
+        public static Color FloralWhite                 { get { return Color.FromBytes(255, 250, 240); } }
+        public static Color ForestGreen                 { get { return Color.FromBytes(34, 139, 34); } }
+        public static Color Gainsboro                   { get { return Color.FromBytes(220, 220, 200); } }
+        public static Color GhostWhite                  { get { return Color.FromBytes(248, 248, 255); } }
+        public static Color Gold                        { get { return Color.FromBytes(255, 215, 0); } }
+        public static Color Goldenrod                   { get { return Color.FromBytes(218, 165, 32); } }
+        public static Color Gray                        { get { return Color.FromBytes(190, 190, 190); } }
+        public static Color Green                       { get { return Color.FromBytes(0, 255, 0); } }
+        public static Color GreenYellow                 { get { return Color.FromBytes(173, 255, 47); } }
+        public static Color Honeydew                    { get { return Color.FromBytes(240, 255, 240); } }
+        public static Color Honeydew2 	                { get { return Color.FromBytes(244, 238, 224); } }
+        public static Color Honeydew3 	                { get { return Color.FromBytes(193, 205, 193); } }
+        public static Color Honeydew4 	                { get { return Color.FromBytes(131, 139, 131); } }
+        public static Color HotPink                     { get { return Color.FromBytes(255, 105, 180); } }
+        public static Color IndianRed                   { get { return Color.FromBytes(205, 92, 92); } }
+        public static Color Ivory 	                    { get { return Color.FromBytes(255, 255, 240); } }
+        public static Color Ivory2 	                    { get { return Color.FromBytes(238, 238, 224); } } 	
+        public static Color Ivory3 	                    { get { return Color.FromBytes(205, 205, 193); } }
+        public static Color Ivory4 	                    { get { return Color.FromBytes(139, 139, 131); } }
+        public static Color Khaki                       { get { return Color.FromBytes(240, 230, 140); } }
+        public static Color Lavender 	                { get { return Color.FromBytes(230, 230, 250); } }
+        public static Color LavenderBlush 	            { get { return Color.FromBytes(255, 240, 245); } }
+        public static Color LawnGreen                   { get { return Color.FromBytes(124, 252, 0); } }
+        public static Color LemonChiffon 	            { get { return Color.FromBytes(255, 250, 205); } }
+        public static Color LightBlue                   { get { return Color.FromBytes(173, 216, 230); } }
+        public static Color LightCoral                  { get { return Color.FromBytes(240, 128, 128); } }
+        public static Color LightCyan                   { get { return Color.FromBytes(224, 255, 255); } }
+        public static Color LightGoldenrod              { get { return Color.FromBytes(238, 221, 130); } }
+        public static Color LightGoldenrodYellow        { get { return Color.FromBytes(250, 250, 210); } }
+        public static Color LightGray                   { get { return Color.FromBytes(211, 211, 211); } }
+        public static Color LightPink                   { get { return Color.FromBytes(255, 182, 193); } }
+        public static Color LightSalmon                 { get { return Color.FromBytes(255, 160, 122); } }
+        public static Color LightSeaGreen               { get { return Color.FromBytes(32, 178, 170); } }
+        public static Color LightSkyBlue                { get { return Color.FromBytes(135, 206, 250); } }
+        public static Color LightSlateBlue              { get { return Color.FromBytes(132, 112, 255); } }
+        public static Color LightSlateGray              { get { return Color.FromBytes(119, 136, 153); } }
+        public static Color LightSteelBlue              { get { return Color.FromBytes(176, 196, 222); } }
+        public static Color LightYellow                 { get { return Color.FromBytes(255, 255, 224); } }
+        public static Color LimeGreen                   { get { return Color.FromBytes(50, 205, 50); } }
+        public static Color Linen                       { get { return Color.FromBytes(240, 240, 230); } }
+        public static Color Maroon                      { get { return Color.FromBytes(176, 48, 96); } }
+        public static Color MediumAquamarine            { get { return Color.FromBytes(102, 205, 170); } }
+        public static Color MediumBlue                  { get { return Color.FromBytes(0, 0, 205); } }
+        public static Color MediumOrchid                { get { return Color.FromBytes(186, 85, 211); } }
+        public static Color MediumPurple                { get { return Color.FromBytes(147, 112, 219); } }
+        public static Color MediumSeaGreen              { get { return Color.FromBytes(60, 179, 113); } }
+        public static Color MediumSlateBlue             { get { return Color.FromBytes(123, 104, 238); } }
+        public static Color MediumSpringGreen           { get { return Color.FromBytes(0, 250, 154); } }
+        public static Color MediumTurquoise             { get { return Color.FromBytes(72, 209, 204); } }
+        public static Color MediumVioletRed             { get { return Color.FromBytes(199, 21, 133); } }
+        public static Color MidnightBlue                { get { return Color.FromBytes(25, 25, 112); } }
+        public static Color MintCream 	                { get { return Color.FromBytes(245, 255, 250); } }
+        public static Color MistyRose                   { get { return Color.FromBytes(255, 228, 225); } }
+        public static Color Moccasin                    { get { return Color.FromBytes(255, 228, 181); } }
+        public static Color NavajoWhite                 { get { return Color.FromBytes(255, 222, 173); } }
+        public static Color Navy                        { get { return Color.FromBytes(0, 0, 128); } }
+        public static Color OldLace                     { get { return Color.FromBytes(253, 245, 230); } }
+        public static Color OliveDrab                   { get { return Color.FromBytes(107, 142, 35); } }
+        public static Color Orange                      { get { return Color.FromBytes(255, 165, 0); } }
+        public static Color OrangeRed                   { get { return Color.FromBytes(255, 69, 0); } }
+        public static Color Orchid                      { get { return Color.FromBytes(218, 112, 214); } }
+        public static Color PaleGoldenrod               { get { return Color.FromBytes(238, 232, 170); } }
+        public static Color PaleGreen                   { get { return Color.FromBytes(152, 251, 152); } }
+        public static Color PaleTurquoise               { get { return Color.FromBytes(175, 238, 238); } }
+        public static Color PaleVioletRed               { get { return Color.FromBytes(219, 112, 147); } }
+        public static Color PapayaWhip                  { get { return Color.FromBytes(255, 239, 213); } }
+        public static Color PeachPuff                   { get { return Color.FromBytes(255, 218, 185); } }
+        public static Color PeachPuff2                  { get { return Color.FromBytes(238, 203, 173); } }
+        public static Color PeachPuff3                  { get { return Color.FromBytes(205, 175, 149); } }
+        public static Color PeachPuff4                  { get { return Color.FromBytes(139, 119, 101); } }
+        public static Color Peru                        { get { return Color.FromBytes(205, 133, 63); } }
+        public static Color Pink                        { get { return Color.FromBytes(255, 192, 203); } }
+        public static Color Plum                        { get { return Color.FromBytes(221, 160, 221); } }
+        public static Color PowderBlue                  { get { return Color.FromBytes(176, 224, 230); } }
+        public static Color Purple                      { get { return Color.FromBytes(160, 32, 240); } }
+        public static Color Red                         { get { return Color.FromBytes(255, 0, 0); } }
+        public static Color RosyBrown                   { get { return Color.FromBytes(188, 143, 143); } }
+        public static Color RoyalBlue                   { get { return Color.FromBytes(65, 105, 225); } }
+        public static Color SaddleBrown                 { get { return Color.FromBytes(139, 69, 19); } }
+        public static Color Salmon                      { get { return Color.FromBytes(250, 128, 114); } }
+        public static Color SandyBrown                  { get { return Color.FromBytes(244, 164, 96); } }
+        public static Color SeaGreen                    { get { return Color.FromBytes(46, 139, 87); } }
+        public static Color Seashell 	                { get { return Color.FromBytes(255, 245, 238); } }	
+        public static Color Seashell2 	                { get { return Color.FromBytes(238, 229, 222); } } 	
+        public static Color Seashell3 	                { get { return Color.FromBytes(205, 197, 191); } } 	
+        public static Color Seashell4 	                { get { return Color.FromBytes(139, 134, 130); } }
+        public static Color Sienna                      { get { return Color.FromBytes(160, 82, 45); } }
+        public static Color SkyBlue                     { get { return Color.FromBytes(135, 206, 250); } }
+        public static Color SlateBlue                   { get { return Color.FromBytes(106, 90, 205); } }
+        public static Color SlateGray                   { get { return Color.FromBytes(112, 138, 144); } }
+        public static Color Snow                        { get { return Color.FromBytes(255, 250, 250); } }
+        public static Color Snow2                       { get { return Color.FromBytes(238, 233, 233); } }
+        public static Color Snow3                       { get { return Color.FromBytes(205, 201, 201); } }
+        public static Color Snow4                       { get { return Color.FromBytes(139, 137, 137); } }
+        public static Color SpringGreen                 { get { return Color.FromBytes(0, 255, 127); } }
+        public static Color SteelBlue                   { get { return Color.FromBytes(70, 130, 180); } }
+        public static Color Tan                         { get { return Color.FromBytes(210, 180, 140); } }
+        public static Color Thistle                     { get { return Color.FromBytes(216, 191, 216); } }
+        public static Color Tomato 	                    { get { return Color.FromBytes(255, 99, 71); } }
+        public static Color Turquoise                   { get { return Color.FromBytes(64, 224, 208); } }
+        public static Color Violet                      { get { return Color.FromBytes(238, 130, 238); } }
+        public static Color VioletRed                   { get { return Color.FromBytes(208, 32, 144); } }
+        public static Color Wheat                       { get { return Color.FromBytes(245, 222, 179); } }
+        public static Color White                       { get { return Color.FromBytes(255, 255, 255); } }
+        public static Color WhiteSmoke                  { get { return Color.FromBytes(245, 245, 245); } }
+        public static Color Yellow                      { get { return Color.FromBytes(255, 255, 0); } }
+        public static Color YellowGreen                 { get { return Color.FromBytes(154, 205, 50); } }
+    }
 }

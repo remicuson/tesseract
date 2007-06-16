@@ -66,6 +66,16 @@ namespace Tesseract.Graphics
    		{
    			return string.Format("Color[{0}:{1},{2},{3}]", a, r, g, b);
    		}
+
+        public static Color FromBytes(byte A, byte R, byte G, byte B)
+        {
+            return new Color((double)A / 255, (double)R / 255, (double)G / 255, (double)B / 255);
+        }
+
+        public static Color FromBytes(byte R, byte G, byte B)
+        {
+            return FromBytes(255, R, G, B);
+        }
 		
 		public static Color FromString(string s)
    		{

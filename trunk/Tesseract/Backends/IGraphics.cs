@@ -4,6 +4,9 @@ using Tesseract.Graphics;
 
 namespace Tesseract.Backends
 {
+    /// <summary>
+    /// The interface platform specific backends must provide for drawing
+    /// </summary>
 	public interface IGraphics: IDisposable
 	{
         /* Operations */
