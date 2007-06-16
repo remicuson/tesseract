@@ -18,6 +18,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Tesseract.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +61,7 @@
     <Compile Include="Geometry\Path.cs" />
     <Compile Include="Geometry\Shapes\Rectangle.cs" />
     <Compile Include="Geometry\Shapes\RoundedRectangle.cs" />
+    <Compile Include="Geometry\TextPath.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Dash.cs" />
@@ -74,8 +76,10 @@
     <Compile Include="Misc\MouseEventArgs.cs" />
     <Compile Include="Misc\RenderEventArgs.cs" />
     <Compile Include="Misc\TypeStore.cs" />
+    <Compile Include="Misc\XMLLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Theming\DefaultThemer\DefaultThemer.cs" />
+    <Compile Include="Theming\DefaultThemer\XMLStyleLoader.cs" />
     <Compile Include="Theming\IThemer.cs" />
     <Compile Include="Theming\ThemerBase.cs" />
     <Compile Include="TIM\TIM.cs" />

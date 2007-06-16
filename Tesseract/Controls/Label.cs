@@ -5,25 +5,27 @@ using Tesseract.Graphics;
 
 namespace Tesseract.Controls
 {
+    /// <summary>
+    /// A control for displaying text
+    /// </summary>
 	public class Label: Control
 	{
+        /// <summary>
+        /// Default constructor
+        /// </summary>
 		public Label()
 		{
 			this.AutoSize = true;
 		}
 		
 		string text;
+        /// <summary>
+        /// The text displayed by this label
+        /// </summary>
 		public string Text
 		{
 			get { return text; }
 			set { text = value; }
-		}
-		
-		PatternList textfill;
-		public PatternList TextFill
-		{
-			get { return textfill; }
-			set { textfill = value; }
 		}
 		
 		public override void HandleAutoSize()
@@ -66,5 +68,9 @@ namespace Tesseract.Controls
 			return flowChunks;
 		}
 
+        public override bool CanActivate()
+        {
+            return false;
+        }
 	}
 }

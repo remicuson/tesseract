@@ -36,7 +36,7 @@ namespace Tesseract
         /// <summary>
         /// The width of the path
         /// </summary>
-		public Distance W
+		public virtual Distance W
 		{
 			get { return w; }
 			set
@@ -58,7 +58,7 @@ namespace Tesseract
         /// <summary>
         /// The height of the path
         /// </summary>
-		public Distance H
+		public virtual Distance H
 		{
 			get { return h; }
 			set

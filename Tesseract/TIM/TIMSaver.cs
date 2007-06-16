@@ -4,7 +4,7 @@ using Tesseract.Controls;
 
 namespace Tesseract.TIM
 {
-	public class TIMSaver
+	internal class TIMSaver
 	{
 		public TIMSaver()
 		{
